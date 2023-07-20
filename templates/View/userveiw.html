@@ -1,0 +1,37 @@
+{% extends 'adminside/basedashboard.html' %}
+{% block title %}User_View{% endblock %}
+{% load static %}
+{% block dashbody %}
+
+<div class="card">
+    <div class="card-body">
+        <form>
+            {% comment %} {% for u in user %} {% endcomment %}
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">User id</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.id}}">
+            
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">last name</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.first_name}}">
+             
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.email}}">
+              
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Phone number</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.phone_numebr}}">
+               
+            </div>
+         
+         {% comment %} {% endfor %} {% endcomment %}
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}
