@@ -1,21 +1,12 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
-
-import products
+from variant.models import Variant,VariantImage
+from products.models import Size,Color,Product
 from .models import Product
 from categories.models import category
-
-from django.db.models import Sum
-from django.db.models.functions import TruncDay
-from django.db.models import DateField
-from django.db.models.functions import Cast
-from datetime import datetime,timedelta
+from variant.models import Variant
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
 
 
 
@@ -23,9 +14,13 @@ from django.core.exceptions import ValidationError
 def product(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    product = Product.objects.all().order_by('id')   
+    product = Product.objects.all().order_by('id') 
+   
+    
+    
     product_list={
         'product' : product,
+        # 'variant'  : variant,
         'categories' : category.objects.all(),
  
        
@@ -113,4 +108,22 @@ def product_edit(request,product_id):
         
         return redirect('product') 
 
-        
+    
+def product_view(request,product_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+  
+    variant=Variant.objects.filter(product=product_id)
+    size_range= Size.objects.all().order_by('id')
+    color_name= Color.objects.all().order_by('id')
+    product=Product.objects.all().order_by('id')
+    variant_list={
+        'variant'    :variant,
+        'size_range' :size_range,
+        'color_name' :color_name, 
+         'product'   :product,
+    }
+    return render(request,'View/product_view.html',{'variant_list':variant_list})  
+
+
+  

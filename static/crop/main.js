@@ -22,8 +22,8 @@ input.addEventListener('change', ()=>{
     console.log($image)
 
     $image.cropper({
-        // aspectRatio: NaN,
-        aspectRatio: 1/1,
+        aspectRatio: NaN,
+        // aspectRatio: 3/5,
         crop: function(event) {
             console.log(event.detail.x);
             console.log(event.detail.y);

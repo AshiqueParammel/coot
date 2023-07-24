@@ -18,31 +18,35 @@ def categories(request):
 
 @login_required(login_url='admin_login1')
 def add_category(request):
-    if not request.user.is_superuser:
-        return redirect('admin_login1')
+    try:
+        if not request.user.is_superuser:
+            return redirect('admin_login1')
 
-    if request.method == 'POST':
-        image = request.FILES.get('image', None)
-        name = request.POST['categories']
-        description = request.POST['categories_discription']
+        if request.method == 'POST':
+            image = request.FILES.get('image', None)
+            name = request.POST['categories']
+            description = request.POST['categories_discription']
+            
+            # Validation
+            if name.strip() == '':
+                messages.error(request, 'Name Not Found!')
+                return redirect('categories')
+
+            if category.objects.filter(categories=name).exists():
+                messages.error(request, 'Category name already exists')
+                return redirect('categories')
+            # Save
+            if not image:
+                messages.error(request, 'Image not uploaded')
+                return redirect('categories')
+
+            new_category = category(categories=name, categories_discription=description, categories_image=image)
+            new_category.save()
+            messages.success(request,'category added successfully!')
+            return redirect('categories')
+    except:
         
-        # Validation
-        if name.strip() == '':
-            messages.error(request, 'Name Not Found!')
             return redirect('categories')
-
-        if category.objects.filter(categories=name).exists():
-            messages.error(request, 'Category name already exists')
-            return redirect('categories')
-        # Save
-        if not image:
-            messages.error(request, 'Image not uploaded')
-            return redirect('categories')
-
-        new_category = category(categories=name, categories_discription=description, categories_image=image)
-        new_category.save()
-        messages.success(request,'category added successfully!')
-        return redirect('categories')
 
 # Edit Category
 @login_required(login_url='admin_login1')
@@ -76,6 +80,7 @@ def editcategory(request, editcategory_id):
         
         categr = category.objects.get(slug=editcategory_id)
         categr.categories = name
+        categr.slug = name
         categr.categories_discription = description
         categr.save()
         messages.success(request,'category edited successfully!')

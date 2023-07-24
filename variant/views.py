@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 import webcolors
+from django.db.models import Sum,Count
 from .models import Product,Size,Color,Variant,VariantImage
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -16,7 +17,6 @@ def product_variant(request):
     size_range= Size.objects.all().order_by('id')
     color_name= Color.objects.all().order_by('id')
     product=Product.objects.all().order_by('id')
-    
     variant_list={
         'variant'    :variant,
         'size_range' :size_range,
@@ -246,5 +246,10 @@ def image_delete(request, image_id):
         return render(request,'variant/image_management.html',{'image':image,'add_image':add_image})
     except:
            return redirect('product_variant') 
+       
+       
+
+    
+       
             
 

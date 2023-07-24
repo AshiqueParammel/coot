@@ -2,6 +2,38 @@
 {% block title %}Products{% endblock %}
 {% load static %}
 {% block dashbody %}
+
+
+<style>
+    .badge {
+      display: inline-block;
+      padding: 0.25em 0.5em;
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      border-radius: 10rem;
+    }
+  
+    .alert-success {
+      color: #0ab732;
+      background-color: #d4edda;
+      border-color: #36ff65;
+    }
+  
+    .alert-warning {
+      color: #fe0000;
+      background-color: #ffd3d3;
+      border-color: #ffe4e4;
+    }
+    .alert-View {
+      color: #000000;
+      background-color: #cecece;
+      border-color: #c2c1c1;
+    }
+  </style>
 <section class="content-main">
     <div class="content-header">
         <div>
@@ -42,8 +74,8 @@
                             <th scope="col">Name</th>
                             <th scope="col">Category</th>
                             <th scope="col">Price</th>
-                            <th scope="col">Variant</th>
-                            <th scope="col">View</th>
+                            <!-- <th scope="col">View</th> -->
+                            <th scope="col">Variants</th>
                             <th scope="col"></th>
                             <th scope="col">Action</th>
 
@@ -58,8 +90,8 @@
                             <td><b>{{ user.product_name }}</td>
                             <td><b>{{ user.category.categories}}</td>
                             <td ><b>{{ user.product_price }}</td>
-                            <td><b>Variant</td>
-                            <td><b>View</td>
+                            <!-- <td><b>{{user.variant.count}}</td> -->
+                                <td><a href="{% url 'product_view' user.id %}"><span class="badge rounded-pill alert-View btn btn ">View</span> </a></td>
 
                             <td><b>{{ Action}}</td>
                             <td>

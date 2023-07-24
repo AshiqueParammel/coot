@@ -54,7 +54,70 @@
     }
     
 </style>
+<style>.rounded-circlea {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: transparent; /* You can change this to your desired background color */
+  }
+  .category-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .category {
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid transparent ;
+    border-radius: 5px;
+    background-color:transparent;
+    min-width: 200px;
+  }
+ 
+  </style>
+  <style>
+    .product-nav {
+        display: flex;
+        justify-content: first baseline;
 
+    }
+
+    .product-nav-dots {
+        display: flex;
+        align-items: center;
+    }
+
+    .product-nav-dots a {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin: 0 5px;
+        text-decoration: none;
+    }
+
+    .product-nav-dots a:hover {
+        opacity: 0.8;
+    }
+
+    .product-nav-dots a span {
+        display: none;
+    }
+
+    .product-nav-dots a.active {
+        border: 2px solid #cc3333;
+    }
+
+    .product-nav-dots a.active span {
+        display: inline-block;
+        text-indent: -9999px;
+    }
+</style>
 <body>
     <div class="page-wrapper">
         <header class="header header-7">
@@ -106,13 +169,13 @@
                             </a>
                         </div><!-- End .cart-dropdown -->
                         <div class="dropdown cart-dropdown">
-                            <a href="{% url 'logout1' %}" class="dropdown-toggle" role="button">
+                            <a href="{% url 'wish_list' %}" class="dropdown-toggle" role="button">
                                 <i class="icon-star-o"></i>
                                 <span class="cart-count">0</span>
                             </a>
                         </div><!-- End .cart-dropdown -->
                         <div class="dropdown cart-dropdown">
-                            <a href=" {% url 'admin_login1' %}" class="dropdown-toggle" role="button">
+                            <a href="#" class="dropdown-toggle" role="button">
                                 <i class="icon-shopping-cart"></i>
                                 <span class="cart-count">0</span>
                             </a>

@@ -16,9 +16,19 @@ from django.conf import settings
 import random
 from django.core.mail import send_mail
 from django.core.validators import validate_email
+from products.models import Product,Size,Color
+from variant.models import Variant,VariantImage
 # Create your views here.
 
 @login_required(login_url='user_login1')
 def userprofile(request):
    
     return render(request,'userprofile/userprofile.html')
+
+
+
+def checkout(request):
+    
+    return render(request,'userprofile/checkout.html')
+ 
+ 

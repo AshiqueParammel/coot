@@ -5,6 +5,8 @@ urlpatterns=[
 
   
     path('userprofile',views.userprofile,name='userprofile'),
+    path('checkout',views.checkout,name='checkout'),
+  
 
     
    
