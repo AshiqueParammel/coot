@@ -120,12 +120,13 @@
                             <div class="details-filter-row details-row-size">
                                 <label for="size">Size:</label>
                                 <div class="select-custom">
-                                    <select name="size" id="size" class="form-control">
-                                        <option value="#" selected="selected">{{ variant.0.variant.size.size_range }}
-                                        </option>
+                                    <select name="size"  class="form-control">
                                         {% for i in size %}
-                                        <option value="{{i.variant.size.size_range}}">{{i.variant.size.size_range}}</option>
+                                        <option value="{{ i.id}}" id="size-input">{{ i.size_range }}</option>
                                         {% endfor %}
+                                        
+                                        
+                                                           
                                     </select>
                                 </div><!-- End .select-custom -->
 
@@ -204,15 +205,17 @@
 
         var product_id = $(this).data('product_id');
         var add_qty = $('#qty-input').val();
+        var add_size = $('select[name="size"]').val();
 
         // var cart_qty = $('#pro_qty' + product_id).val();  
-        console.log(product_id, add_qty, 'yyyyyyyyyyyyyyyyyyyyyyy1')
+        console.log(product_id, add_qty,add_size, 'yyyyyyyyyyyyyyyyyyyyyyy1')
         $.ajax({
             method: "POST",
             url: "{% url 'add_cart' %}",
             data: {
 
                 'variant_id': product_id,
+                'add_size':add_size,
                 'add_qty': add_qty,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
@@ -222,13 +225,21 @@
 
 
 
-                if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in cart') {
+                if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in cart' ) {
                     swal.fire("Error!", response.status, "error");
                     $('.cartdata').load(location.href + " .cartdata");
-                } else if (response.status === 'Product added successfully') {
+                } else if (response.status === 'Product added successfully') { 
                     swal.fire("", response.status, "success");
                     $('.cartdata').load(location.href + " .cartdata");
-                } else {
+                } else if (response.status === 'you are not login please Login to continue') {
+                    swal.fire("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else if (response.status === 'Sorry! this variant not available') {
+                    swal.fire("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else {
                     swal("Error!", response.status, "error");
                     $('.cartdata').load(location.href + " .cartdata");
                 }

@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}Cart{% endblock %}
 {% load static %}
+{% load mathfilters %}
 {% block body %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/alertify.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/themes/default.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
 
-
-
+{% if cart %}
 <main class="main">
-    <div class="page-header text-center" >
+    <div class="page-header text-center">
         <div class="container">
             <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
         </div><!-- End .container -->
@@ -26,8 +30,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
-                     
-                       
+
+
                         <table class="table table-cart table-mobile">
                             <thead>
 
@@ -49,39 +53,60 @@
                                         <div class="product">
                                             <figure class="product-media">
                                                 <a href="#">
-                                                 
+
                                                     {% for j in img %}
                                                     {% if j.variant.id == i.variant.id %}
-                                                        <img src="{{ j.image.url }}" alt="Variant Image">
+                                                    <img src="{{ j.image.url }}" alt="Variant Image">
                                                     {% endif %}
-                                                {% endfor %}
-                                                        
+                                                    {% endfor %}
+
                                                 </a>
                                             </figure>
 
                                             <h3 class="product-title">
-                                                <a href="#">{{i.variant.product.product_name}}</a>
+                                                <a href="{% url 'product_show' i.variant.product.id i.variant.id %}">{{i.variant.product.product_name}}</a>
                                             </h3><!-- End .product-title -->
                                         </div><!-- End .product -->
                                     </td>
                                     <td class="price-col">{{i.variant.color.color_name}}</td>
                                     <td class="price-col">{{i.variant.size.size_range}}</td>
                                     <td class="price-col">${{i.variant.product.product_price}}</td>
-                                    <td class="quantity-col">
-                                        <div class="cart-product-quantity">
-                                            <input type="number" class="form-control" value="{{i.product_qty}}" min="1" max="10"
-                                                step="1" data-decimals="0" required>
-                                        </div><!-- End .cart-product-quantity -->
+                                    <td class="quantity-col product_data">
+                                        <div class="input-group quantity mx-auto " style="width: 100px;">
+                                            <div class="input-group-btn changeQuantity " data-variantid="{{i.id}}">
+                                                <div class="product-details-quantity">
+                                                    <input readonly class="mtext-104 cl3 txt-center num-product"
+                                                        type="number" min="1" max="5" name="num-product"
+                                                        value="{{i.product_qty}}" id="pro_qty{{i.id}}">
+
+                                                </div><!-- End .product-details-quantity -->
+
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td class="total-col">${{i.variant.product.product_price}}</td>
-                                    <td class="remove-col"><a href="{% url 'remove_cart' i.variant.product.id %}"><button class="btn-remove"><i
-                                                class="icon-close"></i></button></a></td>
+
+                                   
+                                    <!-- Assuming the previous code is here and we focus on the "total-col" element -->
+                                    <td class="total-col">
+                                        $<span id='single_{{i.id}}'>
+                                            {% if single %}
+                                            {{ single }}
+                                            {% else %}
+                                            {{i.single_total}}
+                                            {% endif %}
+                                        </span>
+                                    </td>
+
+
+                                    <td class="remove-col"><a href="{% url 'remove_cart' i.id %}"><button
+                                                class="btn-remove"><i class="icon-close"></i></button></a></td>
                                 </tr>
                                 {% endfor %}
-                       
+
                             </tbody>
+
                         </table><!-- End .table table-wishlist -->
-                        
+
                         <div class="cart-bottom">
                             <div class="cart-discount">
                                 <form action="#">
@@ -107,11 +132,11 @@
                                 <tbody>
                                     <tr class="summary-subtotal">
                                         <td>Subtotal:</td>
-                                        <td>$160.00</td>
+                                        <td>$<span id='Subtotal'>{{total_price}}</span></td>
                                     </tr><!-- End .summary-subtotal -->
                                     <tr class="summary-shipping">
                                         <td>Shipping:</td>
-                                        <td>&nbsp;</td>
+                                        <span>&nbsp;</span>
                                     </tr>
 
                                     <tr class="summary-shipping-row">
@@ -158,12 +183,13 @@
 
                                     <tr class="summary-total">
                                         <td>Total:</td>
-                                        <td>$160.00</td>
+                                        <td>$<span id='grand_total'>{{total_price}}</span></td>
                                     </tr><!-- End .summary-total -->
                                 </tbody>
                             </table><!-- End .table table-summary -->
 
-                            <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
+                            <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED
+                                TO
                                 CHECKOUT</a>
                         </div><!-- End .summary -->
 
@@ -175,11 +201,72 @@
         </div><!-- End .cart -->
     </div><!-- End .page-content -->
     <!-- Add this to the <head> section of your HTML -->
-<link rel="stylesheet" href="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.min.css">
 
-<!-- Add this before the closing </body> tag of your HTML -->
-<script src="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
-
+    <!-- Add this before the closing </body> tag of your HTML -->
+    <script src="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
 </main><!-- End .main -->
+<script>
+    $('.changeQuantity').click(function (e) {
+        e.preventDefault();
+        var variant_id = $(this).data('variantid')
+        var product_qty = $('#pro_qty' + variant_id).val()
+
+        console.log(product_qty, variant_id, '22222222222222222')
+        $.ajax({
+            method: "POST",
+            url: "{%url 'update_cart' %}",
+            data: {
+                'cart_id': variant_id,
+                'product_qty': product_qty,
+                csrfmiddlewaretoken: '{{csrf_token}}'
+            },
+
+            success: function (response) {
+                console.log(response);
+                if (response.status === 'Not allowed this Quantity') {
+                    swal("Error!", response.status, "error")
+                    var checkoutLink = '<a href="#" class="primary-btn">Not allowed this quantity</a>';
+                    $("a.primary-btn").replaceWith(checkoutLink);
+                } else {
+                }
+
+                sub_total = parseInt(response.sub_total)
+                quantity = parseInt(response.quantity)
+                single = parseInt(response.single)
+                var totalColElement = $('#single_' + variant_id);
+                if (single) {
+                    totalColElement.text(single);
+                } else {
+                    totalColElement.text(response.single_total);
+                }
+                document.getElementById('Subtotal').textContent = sub_total
+
+                {% comment %} document.getElementById('tax_field').textContent = sub_total * 0.18 {% endcomment %}
+                {% comment %} document.getElementById('grand_total').textContent = sub_total + (sub_total * 0.18)  {% endcomment %}
+                document.getElementById('grand_total').textContent = sub_total
+                document.getElementById('single').textContent = single
+
+            }
+        });
+    });
+
+</script>
+{% else %}
+<div class="page-header text-center">
+    <div class="container">
+        <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+    </div><!-- End .container -->
+</div><!-- End .page-header -->
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Shop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+        </ol>
+    </div><!-- End .container -->
+</nav><!-- End .breadcrumb-nav -->
+{% endif %}
 
 {% endblock %}

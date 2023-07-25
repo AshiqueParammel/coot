@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from categories.models import category
 from variant.models import VariantImage, Variant
-from products.models import Product
+from products.models import Product,Size,Color
 from cart.models import Cart
 
 def home(request):
@@ -20,16 +20,27 @@ def product_show(request,prod_id,img_id):
     
     variant = VariantImage.objects.filter(variant=img_id)
     variant_images = VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__product')
-    size =VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__size')
+    # size =VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__size')
+    size =Size.objects.all()
     color=VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__color')
-    cart = Cart.objects.filter(user=request.user, variant=prod_id)
+
+    # try:
+    # cart = Cart.objects.filter(user=request.user, variant=prod_id)
+    # except:
+    #         context={
+    #     'variant':variant,
+    #     'size':size,
+    #     'color':color,
+    #     'variant_images' :variant_images,    
         
+    #           }
+    #         return render(request,'product/product_show.html',context)   
     context={
         'variant':variant,
         'size':size,
         'color':color,
         'variant_images' :variant_images,    
-        'cart':cart
+        # 'cart':cart
     }
     
     
