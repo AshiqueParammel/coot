@@ -27,6 +27,7 @@
     background-color: #ffd3d3;
     border-color: #ffe4e4;
   }
+
   .alert-View {
     color: #000000;
     background-color: #cecece;
@@ -90,7 +91,8 @@
                   <span class="badge rounded-pill alert-warning">Deactive</span>
                   {% endif %}
                 </td>
-                <td><a href="{% url 'user_view' user.id %}"><span class="badge rounded-pill alert-View btn btn ">View</span> </a></td>
+                <td><a href="{% url 'user_view' user.id %}"><span
+                      class="badge rounded-pill alert-View btn btn ">View</span> </a></td>
                 <td class="text-end">
                   {% if user.is_active %}
                   <a href="#" class="btn btn-md rounded font-sm" data-bs-toggle="modal"

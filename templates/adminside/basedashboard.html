@@ -46,6 +46,34 @@
     }
   
 </style>
+<style>  .badge {
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: 10rem;
+}
+
+.alert-success {
+  color: #0ab732;
+  background-color: #d4edda;
+  border-color: #36ff65;
+}
+
+.alert-warning {
+  color: #fe0000;
+  background-color: #ffd3d3;
+  border-color: #ffe4e4;
+}
+.alert-View {
+  color: #000000;
+  background-color: #cecece;
+  border-color: #c2c1c1;
+}</style>
 
 <body>
   <!--  Body Wrapper -->
@@ -111,16 +139,16 @@
                 <span>
                   <i class="ti ti-file-description"></i>
                 </span>
-                <span class="hide-menu">Variant management</span>
+                <span class="hide-menu">Variant </span>
               </a>
             </li>
             
             <li class="sidebar-item">
-              <a class="sidebar-link" href="#" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'order_list' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-edit"></i>
                 </span>
-                <span class="hide-menu">Order management</span>
+                <span class="hide-menu">Order </span>
               </a>
             </li>
             <li class="sidebar-item">
@@ -128,7 +156,7 @@
                 <span>
                   <i class="ti ti-plus"></i>
                 </span>
-                <span class="hide-menu">Size management </span>
+                <span class="hide-menu">Size  </span>
               </a>
             </li>
             <li class="sidebar-item">
@@ -136,7 +164,7 @@
                 <span>
                   <i class="ti ti-plus"></i>
                 </span>
-                <span class="hide-menu">Color management </span>
+                <span class="hide-menu">Color  </span>
               </a>
             </li>
             <li class="sidebar-item">

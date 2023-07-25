@@ -6,7 +6,7 @@
 
 
 <main class="main">
-    <div class="page-header text-center" style="">
+    <div class="page-header text-center" >
         <div class="container">
             <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
         </div><!-- End .container -->
@@ -26,14 +26,15 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
-                        {% if remove %}
-                        <h1 style="height: 50%; width: 50%;">cart is empty</h1>
-                        {% else %}
-                        {% for i in variant %}
+                     
+                       
                         <table class="table table-cart table-mobile">
                             <thead>
+
                                 <tr>
                                     <th>Product</th>
+                                    <th>Color</th>
+                                    <th>Size</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
@@ -42,13 +43,19 @@
                             </thead>
 
                             <tbody>
+                                {% for i in cart %}
                                 <tr>
                                     <td class="product-col">
                                         <div class="product">
                                             <figure class="product-media">
                                                 <a href="#">
-                                                    <img src="{{i.image.url}}"
-                                                        alt="Product image">
+                                                 
+                                                    {% for j in img %}
+                                                    {% if j.variant.id == i.variant.id %}
+                                                        <img src="{{ j.image.url }}" alt="Variant Image">
+                                                    {% endif %}
+                                                {% endfor %}
+                                                        
                                                 </a>
                                             </figure>
 
@@ -57,10 +64,12 @@
                                             </h3><!-- End .product-title -->
                                         </div><!-- End .product -->
                                     </td>
+                                    <td class="price-col">{{i.variant.color.color_name}}</td>
+                                    <td class="price-col">{{i.variant.size.size_range}}</td>
                                     <td class="price-col">${{i.variant.product.product_price}}</td>
                                     <td class="quantity-col">
                                         <div class="cart-product-quantity">
-                                            <input type="number" class="form-control" value="1" min="1" max="10"
+                                            <input type="number" class="form-control" value="{{i.product_qty}}" min="1" max="10"
                                                 step="1" data-decimals="0" required>
                                         </div><!-- End .cart-product-quantity -->
                                     </td>
@@ -68,10 +77,11 @@
                                     <td class="remove-col"><a href="{% url 'remove_cart' i.variant.product.id %}"><button class="btn-remove"><i
                                                 class="icon-close"></i></button></a></td>
                                 </tr>
+                                {% endfor %}
+                       
                             </tbody>
                         </table><!-- End .table table-wishlist -->
-                        {% endfor %}
-                        {% endif %}
+                        
                         <div class="cart-bottom">
                             <div class="cart-discount">
                                 <form action="#">
@@ -164,6 +174,12 @@
             </div><!-- End .container -->
         </div><!-- End .cart -->
     </div><!-- End .page-content -->
+    <!-- Add this to the <head> section of your HTML -->
+<link rel="stylesheet" href="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.min.css">
+
+<!-- Add this before the closing </body> tag of your HTML -->
+<script src="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
+
 </main><!-- End .main -->
 
 {% endblock %}
