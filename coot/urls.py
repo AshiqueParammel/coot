@@ -30,6 +30,8 @@ urlpatterns = [
     path('wishlist/',include('wishlist.urls')),
     path('cart/',include('cart.urls')),
     path('order/',include('order.urls')),
+    path('shop/',include('shop.urls')),
+    path('checkout/',include('checkout.urls')),
     path('',include('home.urls')),
     
 ]+static(settings. MEDIA_URL,document_root=settings.MEDIA_ROOT)

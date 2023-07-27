@@ -1,0 +1,31 @@
+
+<!-- shop/quick_view.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick View</title>
+</head>
+<body>
+    <h1>Quick View</h1>
+
+    {% if variant %}
+        <h2>Variant Details</h2>
+        <p>ID: {{ variant.id }}</p>
+        <p>Name: {{ variant.name }}</p>
+        <p>Price: {{ variant.price }}</p>
+        <!-- Add other variant details as needed -->
+
+        {% if image %}
+            <h2>Image</h2>
+            <img src="{{ image.image.url }}" alt="{{ variant.name }}" width="200">
+        {% else %}
+            <p>No image available for this variant.</p>
+        {% endif %}
+    {% else %}
+        <p>No variant found with the specified ID.</p>
+    {% endif %}
+
+    <a href="{% url 'shop:shop' %}">Back to Shop</a>
+</body>
+</html>

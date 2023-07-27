@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Coot{% endblock %}
+{% block title %}Home{% endblock %}
 {% load static %}
 {% block body %}
 <main class="main">
@@ -130,8 +130,9 @@
     {% for i in categories %}
       <div >
         <div style="display: inline-block;">
+            <a href="{% url 'user_category_show' i.id %}">
           <img src="{{ i.categories_image.url }}" class="rounded-circlea" alt=""><br>
-          <h5 class="banner-title" style="text-align: center;">{{ i.categories }}</h5>
+          <h5 class="banner-title" style="text-align: center;">{{ i.categories }}</h5></a>
         </div>
       </div>
      
@@ -195,8 +196,8 @@
                                 <input readonly class="mtext-104 cl3 txt-center num-product" type="hidden"
                                 name="num-product" value="1" id="qty-input">
                                 <div class="product-action">
-                                    <input type="hidden"  value="{{ c.variant.size.id}}" id="size-input" >
-                                    <a  data-product_id="{{ c.variant.id }}" class="btn-product btn-cart add-to-cart-btn"><span>add to cart</span></a>
+                                    <input type="hidden"  value="{{ c.variant.size.id }}" id="size-input" >
+                                    <a href=""  data-product_id="{{ c.variant.id }}" class="btn-product btn-cart add-to-cart-btn"><span>add to cart</span></a>
                                 </div><!-- End .product-action -->
                             </figure><!-- End .product-media -->
 

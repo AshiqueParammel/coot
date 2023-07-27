@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib import messages,auth
 from django.contrib.auth.password_validation import validate_password
+from django.core.validators import validate_email
 
 # verification email
 from .models import UserOTP,CustomUser
@@ -16,7 +17,7 @@ import random
 from django.conf import settings
 import random
 from django.core.mail import send_mail
-from django.core.validators import validate_email
+
 # Create your views here.
 
 def user_signup(request):
@@ -27,6 +28,9 @@ def user_signup(request):
         if get_otp:
             get_email=request.POST.get('email')
             user=CustomUser.objects.get(email=get_email)
+            if not re.search(re.compile(r'^\d{6}$'), get_otp): 
+                messages.error(request,'OTP should only contain numeric!')
+                return render(request,'user\signup.html',{'otp':True,'user':user})  
 
             if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
                 user.is_active=True
@@ -74,7 +78,7 @@ def user_signup(request):
                         messages.error(request,'phonenumber alredy exist!')
                         context['pre_phonenumber']=''
                         return render(request,'user\signup.html',context )
-                
+                    
                 elif not re.search(re.compile(r'(\+91)?(-)?\s*?(91)?\s*?(\d{3})-?\s*?(\d{3})-?\s*?(\d{4})'), phonenumber):   
                     messages.error(request,'phonenumber should only contain numeric!')  
                     context['pre_phonenumber']=''
@@ -155,6 +159,8 @@ def validatepassword(password1):
         return True
     except  ValidationError:
         return  False
+    
+
             
 
     
@@ -205,6 +211,9 @@ def user_loginotp(request):
         if get_otp:
             get_email=request.POST.get('email')
             user=CustomUser.objects.get(email=get_email)
+            if not re.search(re.compile(r'^\d{6}$'), get_otp): 
+                messages.error(request,'OTP should only contain numeric!')
+                return render(request,'user\loginwithotp.html',{'otp':True,'user':user}) 
             if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
                 auth.login(request,user)
                 UserOTP.objects.filter(user=user).delete()
@@ -262,6 +271,9 @@ def forgot_password(request):
         if get_otp:
             get_email=request.POST.get('email')
             user=CustomUser.objects.get(email=get_email)
+            if not re.search(re.compile(r'^\d{6}$'), get_otp): 
+                messages.error(request,'OTP should only contain numeric!')
+                return render(request,'user\password_forgot.html',{'otp':True,'user':user}) 
             if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
                 password1 = request.POST.get('password1')
                 password2 = request.POST.get('password2')

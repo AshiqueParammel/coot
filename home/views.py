@@ -10,6 +10,7 @@ def home(request):
 
     # Get unique VariantImage objects based on the associated Product
     variant_images = VariantImage.objects.order_by('variant__product').distinct('variant__product')
+    
 
     return render(request, 'home/home.html', {'categories': categories, 'products': products, 'variant_images': variant_images})
 
@@ -24,24 +25,25 @@ def product_show(request,prod_id,img_id):
     size =Size.objects.all()
     color=VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__color')
 
-    # try:
-    # cart = Cart.objects.filter(user=request.user, variant=prod_id)
-    # except:
-    #         context={
-    #     'variant':variant,
-    #     'size':size,
-    #     'color':color,
-    #     'variant_images' :variant_images,    
-        
-    #           }
-    #         return render(request,'product/product_show.html',context)   
     context={
         'variant':variant,
         'size':size,
         'color':color,
         'variant_images' :variant_images,    
-        # 'cart':cart
     }
     
     
     return render(request,'product/product_show.html',context)   
+
+
+def user_category_show(request,category_id):
+    
+    variant = VariantImage.objects.filter(variant__product__category=category_id).distinct('variant__color')
+   
+
+    context={
+        'variant':variant,   
+    }
+    
+    
+    return render(request,'category/categoryuser.html',context)   

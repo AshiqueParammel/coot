@@ -32,6 +32,9 @@ def admin_signup(request):
         if get_otp:
             get_email=request.POST.get('email')
             user=CustomUser.objects.get(email=get_email)
+            if not re.search(re.compile(r'^\d{6}$'), get_otp): 
+                messages.error(request,'OTP should only contain numeric!')
+                return render(request,'adminside/admin_signup.html',{'otp':True,'user':user})  
 
             if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
                 user.is_active=True
@@ -114,9 +117,6 @@ def admin_signup(request):
     return render(request,'adminside/admin_signup.html')
        
 def admin_login1(request):
-    # if request.user.is_authenticated:
-    #     return redirect('home')#dashboard user
-   
     if request.method=='POST':
         username=request.POST['username']
         password=request.POST['password']
@@ -133,7 +133,7 @@ def admin_login1(request):
             if user.is_active:
                 if user.is_superuser:
                     login(request,user)
-                    return redirect('dashboard') #dashboard user
+                    return redirect('dashboard') 
                 else:
                     messages.warning(request,'your not admin!')
                 return redirect('admin_login1')
@@ -164,6 +164,9 @@ def admin_forgotpassword(request):
             if get_otp:
                 get_email=request.POST.get('email') 
                 user=CustomUser.objects.get(email=get_email)
+                if not re.search(re.compile(r'^\d{6}$'), get_otp): 
+                    messages.error(request,'OTP should only contain numeric!')
+                    return render(request,'adminside/password_admin_forgot.html',{'otp':True,'user':user})  
                 if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
                     password1 = request.POST.get('password1')
                     password2 = request.POST.get('password2')
@@ -191,45 +194,52 @@ def admin_forgotpassword(request):
                     messages.warning(request,'You Entered a wrong OTP!')
                     return render(request,'adminside/password_admin_forgot.html',{'otp':True,'user':user})  
             else:
-                email=request.POST['email']
-                
-                if email.strip()=='':
-                    messages.error(request,'field cannot empty!')
-                    return render(request,'adminside/password_admin_forgot.html')
-                
-                email_check=validateemail(email)
-                if email_check is False:
-                    messages.error(request,'email not valid!')
-                    return render(request,'adminside/password_admin_forgot.html')
-            
-                if CustomUser.objects.filter(email=email):
+                get_otp=request.POST.get('otp1')
+                email=request.POST.get('user1')
+                if get_otp:
                     user=CustomUser.objects.get(email=email)
-                    user_otp=random.randint(100000,999999)
-                    UserOTP.objects.create(user=user,otp=user_otp)
-                    message=f'Hello\t{user.username},\n Your OTP to verify your account for Coot is {user_otp}\n Thanks' 
-                    send_mail(
-                        "welcome to Coot Verify Email",
-                        message,
-                        settings.EMAIL_HOST_USER,
-                        [user.email],
-                        fail_silently=False
-                    )
-                    return render (request,'adminside/password_admin_forgot.html',{'otp':True,'user':user}) 
-                else:
-                    messages.error(request,'email does not exist!')
-                    return render(request,'adminside/password_admin_forgot.html')
+                    messages.error(request,'field cannot empty!')
+                    return render(request,'user\password_forgot.html',{'otp':True,'user':user})
+                else:    
+                    email=request.POST['email']
+                    
+                    if email.strip()=='':
+                        messages.error(request,'field cannot empty!')
+                        return render(request,'adminside/password_admin_forgot.html')
+                    
+                    email_check=validateemail(email)
+                    if email_check is False:
+                        messages.error(request,'email not valid!')
+                        return render(request,'adminside/password_admin_forgot.html')
+                
+                    if CustomUser.objects.filter(email=email):
+                        user=CustomUser.objects.get(email=email)
+                        user_otp=random.randint(100000,999999)
+                        UserOTP.objects.create(user=user,otp=user_otp)
+                        message=f'Hello\t{user.username},\n Your OTP to verify your account for Coot is {user_otp}\n Thanks' 
+                        send_mail(
+                            "welcome to Coot Verify Email",
+                            message,
+                            settings.EMAIL_HOST_USER,
+                            [user.email],
+                            fail_silently=False
+                        )
+                        return render (request,'adminside/password_admin_forgot.html',{'otp':True,'user':user}) 
+                    else:
+                        messages.error(request,'email does not exist!')
+                        return render(request,'adminside/password_admin_forgot.html')
         else:
              messages.error(request,'you are not admin!')
              return render(request,'adminside/password_admin_forgot.html')
                     
     return render (request,'adminside/password_admin_forgot.html')  
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def admin_logout1(request):
     logout(request)
     return redirect('admin_login1')
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def usermanagement_1(request):
     users = CustomUser.objects.all().order_by('id')
     return render(request,'adminside/usermanagement.html',{'users':users})
