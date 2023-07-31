@@ -3,7 +3,6 @@ from django.forms import ValidationError
 from django.shortcuts import render,redirect
 from django.views.decorators.cache import cache_control,never_cache
 from django.contrib.auth.decorators import login_required
-from coot.settings import AUTH_USER_MODEL
 from products.models import Product,Size,Color
 from variant.models import Variant,VariantImage
 from user.models import CustomUser
@@ -12,52 +11,26 @@ from checkout.models import Order,OrderItem
 from django.contrib import messages
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 
 @login_required(login_url='user_login1')
 def userprofile(request):
     
-    # orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    # order_items = OrderItem.objects.filter(order__in=orders).order_by('-order__created_at')
+    user = CustomUser.objects.get(email=request.user.email)
+    address =Address.objects.filter(user=request.user)
     
-    # for order in orders:
-    #     all_orderitems_cancelled = all(order_item.status == 'Cancelled' for order_item in order.orderitem_set.all())
-
-    #     if all_orderitems_cancelled:
-    #         order.od_status = 'Cancelled'
-    #     elif all(order_item.status == 'Delivered' for order_item in order.orderitem_set.all()):
-    #         order.od_status = 'Delivered'
-    #     elif all(order_item.status == 'Return' for order_item in order.orderitem_set.all()):
-    #         order.od_status = 'Return'
-    #     elif all(order_item.status == 'Processing' for order_item in order.orderitem_set.all()):
-    #         order.od_status = 'Processing'
-    #     else:
-    #         order.od_status = 'Pending'
-
-    #     order.save()
-    
-        # user_info = {
-        # 'address': Address.objects.filter(user=request.user).first(),
-        # 'user': User.objects.get(phone_number=request.user),
-        # 'wallets': Wallet.objects.filter(user=request.user),
-        # 'cart': Cart.objects.filter(user=request.user).order_by('-id'),
-        # 'wishlist': Wishlist.objects.filter(user=request.user).order_by('-id'),
-        # 'addresses': Address.objects.filter(user=request.user),
-        # 'orders': orders,
-        # 'order_items': order_items,
-        #  }
         
-        # return render(request,'userprofile/userprofile.html', user_info)
-        return render(request,'userprofile/userprofile.html')
+    context={
+        'user1':user,
+        'address':address,
+            
+        }
+    return render(request,'userprofile/userprofile.html',context)
 
 
-
-def checkout(request):
-    
-    return render(request,'userprofile/checkout.html')
-
-
-def add_address(request):
+def add_address(request,add_id):
 
     if request.method == 'POST':
 
@@ -78,11 +51,12 @@ def add_address(request):
             'pre_country':country,
             'pre_address':address,
             'pre_city':city,
-            'pre_ pincode':pincode,
+            'pre_pincode':pincode,
             'pre_phone':phone,
             'pre_email':email,
             'pre_state':state,
             'pre_order_note':order_note,
+            'check':add_id,
     
                 }
 
@@ -93,55 +67,63 @@ def add_address(request):
         if first_name.strip() == '' : 
             messages.error(request,'names cannot be empty!!!')
             context['pre_first_name']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
             
         if last_name.strip() == '':
             messages.error(request,'names cannot be empty!!!')
             context['pre_last_name']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
         
         if country.strip()=='':
             messages.error(request,'Country cannot be empty')
             context['pre_country']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
         if city.strip()=='':
             messages.error(request,'city cannot be empty')
             context['pre_city']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
         if address.strip()=='':
             messages.error(request,'address cannot be empty')
             context['pre_address']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
         if pincode.strip()=='':
             messages.error(request,'pincode cannot be empty')
-            context['pre_ pincode']=''
-            return redirect('edit_address',context)
+            context['pre_pincode']=''
+            return render(request,'userprofile/add_address.html',context)
         if not re.search(re.compile(r'^\d{6}$'),pincode ):  
             messages.error(request,'should only 6 contain numeric!')   
-            context['pre_ pincode']=''
-            return redirect('edit_address',context)
-        if not re.search(re.compile(r'(\+91)?(-)?\s*?(91)?\s*?(\d{3})-?\s*?(\d{3})-?\s*?(\d{4})'),phone ): 
+            context['pre_pincode']=''
+            return render(request,'userprofile/add_address.html',context)
+        if not re.search(re.compile(r'(\+91)?(-)?\s*?(91)?\s*?(\d{3})-?\s*?(\d{3})-?\s*?(\d{4})'),phone): 
             messages.error(request,'Enter valid phonenumber!')
             context['pre_phone']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
+        phonenumber_checking=len(phone)
+        if not  phonenumber_checking==10:
+            messages.error(request,'phonenumber should be must contain 10digits!')  
+            context['pre_phone']=''
+            return render(request,'userprofile/add_address.html',context)
+                    
         if phone.strip()=='':
             messages.error(request,'phone cannot be empty')
             context['pre_phone']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
         if email.strip()=='':
             messages.error(request,'email cannot be empty')
             context['pre_email']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
         email_check=validateemail(email)
         if email_check is False:
             messages.error(request,'email not valid!')
             context['pre_email']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
                    
         if state.strip()=='':
             messages.error(request,'state cannot be empty')
             context['pre_state']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/add_address.html',context)
+        
+        # ad =Address.objects.check()
 
         ads=Address()
         ads.user=request.user
@@ -156,9 +138,21 @@ def add_address(request):
         ads.state=state
         ads.order_note=order_note
         ads.save()
+        messages.success(request,' Address Added successfully!')
+        if add_id==1:
+            check=1
+            return redirect('userprofile')
+        else: 
+            check=2 
+            return redirect('checkout')
+        
 
-        return redirect('userprofile')
-    
+        
+    if add_id==1:
+        check=1
+    else: 
+        check=2    
+    return render(request,'userprofile/add_address.html',{'check':check})
 
 def edit_address(request,edit_id):
 
@@ -174,78 +168,55 @@ def edit_address(request,edit_id):
         email=request.POST.get('email')
         state=request.POST.get('state')
         order_note=request.POST.get('order_note')
-        
-        context={
-            'pre_first_name': first_name,
-            'pre_last_name':last_name,
-            'pre_country':country,
-            'pre_address':address,
-            'pre_city':city,
-            'pre_ pincode':pincode,
-            'pre_phone':phone,
-            'pre_email':email,
-            'pre_state':state,
-            'pre_order_note':order_note,
-    
-                }
-
+        try:
+            editaddress=Address.objects.get(id=edit_id)
+        except:
+            return redirect('userprofile')
 
         if request.user is None:
             return
         
         if first_name.strip() == '' : 
             messages.error(request,'names cannot be empty!!!')
-            context['pre_first_name']=''
-            return redirect('edit_address',context)
-            
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if last_name.strip() == '':
             messages.error(request,'names cannot be empty!!!')
-            context['pre_last_name']=''
-            return redirect('edit_address',context)
-        
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if country.strip()=='':
             messages.error(request,'Country cannot be empty')
-            context['pre_country']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if city.strip()=='':
             messages.error(request,'city cannot be empty')
-            context['pre_city']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if address.strip()=='':
             messages.error(request,'address cannot be empty')
-            context['pre_address']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if pincode.strip()=='':
             messages.error(request,'pincode cannot be empty')
-            context['pre_ pincode']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if not re.search(re.compile(r'^\d{6}$'),pincode ):  
             messages.error(request,'should only 6 contain numeric!')   
-            context['pre_ pincode']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if not re.search(re.compile(r'(\+91)?(-)?\s*?(91)?\s*?(\d{3})-?\s*?(\d{3})-?\s*?(\d{4})'),phone ): 
             messages.error(request,'Enter valid phonenumber!')
-            context['pre_phone']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if phone.strip()=='':
             messages.error(request,'phone cannot be empty')
-            context['pre_phone']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
+        phonenumber_checking=len(phone)
+        if not  phonenumber_checking==10:
+            messages.error(request,'phonenumber should be must contain 10digits!')  
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         if email.strip()=='':
             messages.error(request,'email cannot be empty')
-            context['pre_email']=''
-            return redirect('edit_address',context)
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         email_check=validateemail(email)
         if email_check is False:
             messages.error(request,'email not valid!')
-            context['pre_email']=''
-            return redirect('edit_address',context)
-                   
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})     
         if state.strip()=='':
             messages.error(request,'state cannot be empty')
-            context['pre_state']=''
-            return redirect('edit_address',context)
-
+            return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
         try:
             ads = Address.objects.get(id=edit_id)
         except Address.DoesNotExist:
@@ -263,26 +234,62 @@ def edit_address(request,edit_id):
         ads.state=state
         ads.order_note=order_note
         ads.save()
+        messages.success(request,' Address Edited successfully!')
 
         return redirect('userprofile')
-    else:
+    try:
+        editaddress=Address.objects.get(id=edit_id)
+    except:
         return redirect('userprofile')
+            
+    return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
+
+
+def View_address(request,view_id):
     
-def editprofile(request):
+    try:
+        Viewaddress=Address.objects.get(id=view_id)
+    except:
+        return redirect('userprofile')
+            
+    
+    return render(request,'userprofile/view_address.html',{'Viewaddress':Viewaddress})   
+    
+    
+def edit_profile(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
+        try:
+            user = CustomUser.objects.get(phone_number=request.user)    
+        except:  
+               return redirect('userprofile') 
 
-        print(phone_number,first_name)
+        # print(phone_number,first_name)
 
         if phone_number == '':
             messages.error(request, 'phone_number is empty')
-            return redirect('userprofile')
-        if first_name == '' or last_name == '':
+            return render(request,'userprofile/edit_profile.html',{'user':user})
+        if not re.search(re.compile(r'(\+91)?(-)?\s*?(91)?\s*?(\d{3})-?\s*?(\d{3})-?\s*?(\d{4})'),phone_number ): 
+            messages.error(request,'Enter valid phonenumber!')
+            return render(request,'userprofile/edit_profile.html',{'user':user})
+        phonenumber_checking=len(phone_number)
+        if not  phonenumber_checking==10:
+            messages.error(request,'phonenumber should be must contain 10digits!')  
+            return render(request,'userprofile/edit_profile.html',{'user':user})
+        if first_name.strip() == '' or last_name.strip() == '':
             messages.error(request, 'First or Lastname is empty')
-            return redirect('userprofile')
+            return render(request,'userprofile/edit_profile.html',{'user':user})
+        if email.strip()=='':
+            messages.error(request,'email cannot be empty')
+            return render(request,'userprofile/edit_profile.html',{'user':user})
+        email_check=validateemail(email)
+        if email_check is False:
+            messages.error(request,'email not valid!')
+            return render(request,'userprofile/edit_profile.html',{'user':user})
+            
       
         try:
             user = CustomUser.objects.get(phone_number=request.user)
@@ -293,42 +300,55 @@ def editprofile(request):
             user.email=email
             user.save()
             messages.success(request, 'userprofile updated successfully')
+            return redirect('userprofile') 
+            
         except:
             messages.error(request, 'User does not exist')
-    return redirect('userprofile')
+    try:
+        user = CustomUser.objects.get(phone_number=request.user)    
+    except:  
+           return redirect('userprofile')       
+    return render(request,'userprofile/edit_profile.html',{'user':user})
 
 # Change Password 
-def changepassword(request):
+def change_password(request):
     if request.method == 'POST':
         old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
         confirm_new_password = request.POST.get('confirm_new_password')
 #  Validation
+        if new_password.strip() == '' or confirm_new_password.strip() == '':
+            messages.error(request, 'fild cannot is empty!')
+            return render(request,'userprofile/password.html') 
+
         if new_password != confirm_new_password:
             messages.error(request,'Password did not match!')
-            return redirect('userprofile')
+            return render(request,'userprofile/password.html')  
         password_check=validatepassword(new_password)
         if password_check is False:
                     messages.error(request,'Enter strong password!')
-                    return redirect('userprofile')
-        user = CustomUser.objects.get(phone_number=request.user)
-        user_password =user.password
-        if old_password == user_password:
+                    return render(request,'userprofile/password.html')  
+        user = CustomUser.objects.get(username=request.user)
+        if check_password(old_password, user.password):
             user.set_password(new_password)
             user.save()
-            AUTH_USER_MODEL.login(request,user)
 
+            update_session_auth_hash(request, user)
+    
             messages.success(request, 'Password updated successfully')
             return redirect('userprofile')
         else:
             messages.error(request, 'Invalid old password')
-            return redirect('userprofile')
-    return redirect('userprofile')
+            return render(request,'userprofile/password.html')
+    return render(request,'userprofile/password.html')    
+    
 
 # delete Address
-def deleteaddress(request,delete_id):
+def delete_address(request,delete_id):
     address = Address.objects.get(id = delete_id)
     address.delete()
+    messages.success(request,' Address deleted successfully!')
+    
     return redirect('userprofile')
 
  

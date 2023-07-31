@@ -32,12 +32,13 @@ def user_signup(request):
                 messages.error(request,'OTP should only contain numeric!')
                 return render(request,'user\signup.html',{'otp':True,'user':user})  
 
-            if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
+            session_otp=request.session.get('otp')
+            if int(get_otp) == session_otp:
                 user.is_active=True
                 user.save()
                 auth.login(request,user)
-                # messages.success(request,f'Account is created for {user.email}')
-                UserOTP.objects.filter(user=user).delete()
+                messages.success(request,f'Account is created for {user.first_name}')
+                del request.session['otp']
                 return redirect('home')
             else:
                 messages.warning(request,f'you Entered a Wrong OTP')
@@ -131,7 +132,7 @@ def user_signup(request):
                 user.last_login=None
                 user.save()
                 user_otp=random.randint(100000,999999)
-                UserOTP.objects.create(user=user,otp=user_otp)
+                request.session['otp']=user_otp
                 mess=f'Hello \t{user.first_name},\nYour OTP to verify your account for Coot is {user_otp}\n Thanks You!'
                 send_mail(
                     "Welcome to Coot , verify your Email",
@@ -214,9 +215,10 @@ def user_loginotp(request):
             if not re.search(re.compile(r'^\d{6}$'), get_otp): 
                 messages.error(request,'OTP should only contain numeric!')
                 return render(request,'user\loginwithotp.html',{'otp':True,'user':user}) 
-            if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
+            session_otp=request.session.get('otp')
+            if int(get_otp) == session_otp:
                 auth.login(request,user)
-                UserOTP.objects.filter(user=user).delete()
+                del request.session['otp']
                 return redirect('home')   
             else:
                 messages.warning(request,'You Entered a wrong OTP!')
@@ -244,7 +246,7 @@ def user_loginotp(request):
                 if CustomUser.objects.filter(email=email):
                     user=CustomUser.objects.get(email=email)
                     user_otp=random.randint(100000,999999)
-                    UserOTP.objects.create(user=user,otp=user_otp)
+                    request.session['otp']=user_otp
                     message=f'Hello\t{user.first_name},\n Your OTP to verify your account for Coot is {user_otp}\n Thanks' 
                     send_mail(
                         "welcome to Coot Verify Email",
@@ -253,6 +255,7 @@ def user_loginotp(request):
                         [user.email],
                         fail_silently=False
                     )
+             
                     return render (request,'user\loginwithotp.html',{'otp':True,'user':user}) 
                 else:
                     messages.error(request,'email does not exist!')
@@ -274,7 +277,8 @@ def forgot_password(request):
             if not re.search(re.compile(r'^\d{6}$'), get_otp): 
                 messages.error(request,'OTP should only contain numeric!')
                 return render(request,'user\password_forgot.html',{'otp':True,'user':user}) 
-            if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
+            session_otp=request.session.get('otp')
+            if int(get_otp) == session_otp:
                 password1 = request.POST.get('password1')
                 password2 = request.POST.get('password2')
                 context ={
@@ -294,7 +298,7 @@ def forgot_password(request):
                     return render(request,'user\password_forgot.html',{'otp':True,'user':user,'pre_otp':get_otp})
                 user.set_password(password1)
                 user.save()
-                UserOTP.objects.filter(user=user).delete()
+                del request.session['otp']
                 messages.success(request,'Your password is changed!')
                 return redirect('user_login1')
             else:
@@ -324,7 +328,7 @@ def forgot_password(request):
                 if CustomUser.objects.filter(email=email):
                     user=CustomUser.objects.get(email=email)
                     user_otp=random.randint(100000,999999)
-                    UserOTP.objects.create(user=user,otp=user_otp)
+                    request.session['otp']=user_otp
                     message=f'Hello\t{user.first_name},\n Your OTP to verify your account for Coot is {user_otp}\n Thanks' 
                     send_mail(
                         "welcome to Coot Verify Email",

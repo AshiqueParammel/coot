@@ -19,9 +19,9 @@
                 <div class="container-fluid">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item"><a href="#">No Sidebar</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Fullwidth</li>
+                        <li class="breadcrumb-item"><a href="{% url 'Shop' %}">Shop</a></li>
+                        <!-- <li class="breadcrumb-item"><a href="#">No Sidebar</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Fullwidth</li> -->
                     </ol>
                 </div><!-- End .container-fluid -->
             </nav><!-- End .breadcrumb-nav -->
@@ -35,7 +35,7 @@
 
                         <div class="toolbox-center">
                             <div class="toolbox-info">
-                                Showing <span>12 of 56</span> Products
+                                <!-- Showing <span>12 of 56</span> Products -->
                             </div><!-- End .toolbox-info -->
                         </div><!-- End .toolbox-center -->
 
@@ -55,6 +55,8 @@
 
                     <div class="products">
                         <div class="row">
+                            {% if variant_images %}
+                           
                             {% for c in variant_images %}
                             <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
 
@@ -108,9 +110,14 @@
                                 </div><!-- End .product -->
                             </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
                             {% endfor %}
+    
                         </div><!-- End .row -->
-
+                        {% else %}
+                        <h5 style="text-align: center;"> Search not found</h5>
+                     
+                        {% endif %}
                         <div class="load-more-container text-center">
+                            
                             <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
                         </div><!-- End .load-more-container -->
                     </div><!-- End .products -->

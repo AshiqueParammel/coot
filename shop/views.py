@@ -5,12 +5,12 @@ from products.models import Product,Size,Color
 from cart.models import Cart
 
 def Shop(request):
-    products = Product.objects.all()
+    
 
     # Get unique VariantImage objects based on the associated Product
     variant_images = VariantImage.objects.order_by('variant__product').distinct('variant__product')
 
-    return render(request, 'shop/shop.html', { 'products': products, 'variant_images': variant_images})
+    return render(request, 'shop/shop.html', {  'variant_images': variant_images})
 
 # def Quick_view(request,img_id):
 #     try:

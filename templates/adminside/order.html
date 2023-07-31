@@ -36,19 +36,47 @@
                         <thead>
                             <tr>
                                 <th scope="col">id</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Email</th>
+                                <th scope="col">user</th>
+                                <th scope="col">Order Date</th>
+                                <th scope="col">Total Amount</th>
+                                <th scope="col">payment mode</th>
+                                <th scope="col">View Order</th>
                                 <th scope="col">Status</th>
-                                <th scope="col">View</th>
-                                <th scope="col" class="text-end">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-
+                            {% for i in order %}
                             <tr>
+                                <td><b>{{ i.id }}</td>
+                                <td><b>{{ i.user.first_name }}</td>
+                                <td><b>{{ i.created_at}}</td>
+                                <td><b>{{ i.total_price }}</td>
+                                <td><b>{{ i.payment_mode }}</td>
+                                <td><a href="{% url 'order_view' i.id %}"><span class="badge rounded-pill alert-View btn btn ">View</span> </a>
+                                </td>
+                        
+                                <td>
+                                    {% if i.od_status == 'Pending' %}
+                                    <span class="badge rounded-pill alert-secondary">{{ i.od_status }}</span>
+                                    {% elif i.od_status == 'Processing' %}
+                                    <span class="badge rounded-pill alert-warning">{{ i.od_status }}</span>
+                                    {% elif i.od_status == 'Shipped' %}
+                                    <span class="badge rounded-pill alert-primary">{{ i.od_status }}</span>
+                                    {% elif i.od_status == 'Delivered' %}
+                                    <span class="badge rounded-pill alert-success">{{ i.od_status }}</span>
+                                    {% elif i.od_status == 'Cancelled' or i.od_status == 'refunded' %}
+                                    <span class="badge rounded-pill alert-danger">{{ i.od_status }}</span>
+                                    {% endif %}
+                                </td>
+
+
+
+
+
+
 
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
 

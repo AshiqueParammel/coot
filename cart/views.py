@@ -97,7 +97,7 @@ def add_cart(request):
             return JsonResponse({'status': 'you are not login please Login to continue'})
             
             
-    return redirect('product_detail')    
+    return redirect('home')    
 
                  
     

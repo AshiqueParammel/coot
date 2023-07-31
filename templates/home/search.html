@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Category{% endblock %}
+{% block title %}Shop{% endblock %}
 {% load static %}
 {% block body %}
 
@@ -12,16 +12,16 @@
         <main class="main">
         	<div class="page-header text-center">
         		<div class="container-fluid">
-        			<h1 class="page-title">Category</h1>
+        			<h1 class="page-title">SHOP</h1>
         		</div><!-- End .container-fluid -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
                 <div class="container-fluid">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item"><a href="#">No Sidebar</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Fullwidth</li>
+                        <li class="breadcrumb-item"><a href="">Search</a></li>
+                        <!-- <li class="breadcrumb-item"><a href="#">No Sidebar</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Fullwidth</li> -->
                     </ol>
                 </div><!-- End .container-fluid -->
             </nav><!-- End .breadcrumb-nav -->
@@ -35,7 +35,7 @@
 
                         <div class="toolbox-center">
                             <div class="toolbox-info">
-                                <!-- Showing <span>12 of 56</span> Products -->
+                                Showing <span>12 of 56</span> Products
                             </div><!-- End .toolbox-info -->
                         </div><!-- End .toolbox-center -->
 
@@ -55,7 +55,7 @@
 
                     <div class="products">
                         <div class="row">
-                            {% for c in variant %}
+                            {% for c in variant_images %}
                             <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
 
                                 <div class="product">

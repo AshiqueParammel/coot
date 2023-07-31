@@ -5,6 +5,10 @@
 
 
 {% block body %}
+<style>.bg-image  {
+    background-image: url('{% static "user/assets/images/404.jpg" %}');
+   
+}</style>
 
 <div class="page-wrapper">
     <header class="header">
@@ -14,18 +18,17 @@
             </div><!-- End .container -->
         </div><!-- End .header-middle -->
     </header><!-- End .header -->
-
-    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17"
-        style="background-image: url "{% static 'user/assets/images/404.jpg' %}">
+ 
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17">
 
 
         {% if otp %}
-        <div class="container">
+        <div class="container"> 
             <div class="form-box">
                 <div class="form-tab">
                     <ul class="nav nav-pills nav-fill" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="signin-tab-2" data-toggle="tab" href="#signin-2" role="tab"
+                            <a class="nav-link active" id="signin-tab-2"  data-toggle="tab" href="#signin-2" role="tab"
                                 aria-controls="signin-2">OTP</a> <br>
                                 <p>Please check your Email   {{user.email}}</p>
                         </li>

@@ -154,10 +154,11 @@
                     <div class="header-right">
                         <div class="header-search header-search-extended header-search-visible">
                             <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
+                            <form action="{% url 'search_view' %}" method="POST">
+                                {% csrf_token %}
                                 <div class="header-search-wrapper search-wrapper-wide">
                                     <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q"
+                                    <input type="search" class="form-control" name="search" id="q"
                                         placeholder="Search product ..." required>
                                     <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
                                 </div><!-- End .header-search-wrapper -->
@@ -303,12 +304,13 @@
     <div class="mobile-menu-container"  style="background-color: #000000;">
         <div class="mobile-menu-wrapper">
             <span class="mobile-menu-close"><i class="icon-close"></i></span>
-            <form action="#" method="get" class="mobile-search">
+            <form action="{% url 'search_view' %}" method="POST" class="mobile-search">
+                {% csrf_token %}
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search"
-                    placeholder="Search in..." required>
+                <input type="search" class="form-control" name="search" id="mobile-search" placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
+            
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
                     <li class="active">
@@ -471,6 +473,21 @@
     <!-- Main JS File -->
     <script src="{% static 'user/assets/js/main.js' %}"></script>
     <script src="{% static 'user/assets/js/demos/demo-7.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+
+  
+    {% for message in messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    text: "{{ message }}",
+                    timer: 3000, // Adjust the timer to control how long each alert stays visible (in milliseconds)
+                });
+            });
+        </script>
+    {% endfor %}
+
+
 </body>
 
 </html>
