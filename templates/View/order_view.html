@@ -3,11 +3,10 @@
 {% load static %}
 {% block dashbody %}
 <style>
-
-    .status{
-display: flex;
-flex-direction: row;
-justify-content: space-between;
+    .status {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
 
     }
 </style>
@@ -73,49 +72,49 @@ justify-content: space-between;
                 <div class="card">
 
                     <div class="card-body">
-                    <table >
-                    
-                        <tr>
-                            <td><strong>Order id</strong></td>
-                            <td>:{{orderview.id}}</td>
-                        </tr>
+                        <table>
 
-                        <tr>
-                            <td><strong>User Name</strong></td>
-                            <td>{{orderview.user.first_name}}</td>
-                        </tr>
+                            <tr>
+                                <td><strong>Order id</strong></td>
+                                <td>:{{orderview.id}}</td>
+                            </tr>
 
-                        <tr>
-                            <td><strong>Total price</strong></td>
-                            <td>:${{orderview.total_price}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Payment method</strong></td>
-                            <td>:{{orderview.payment_mode}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Payment id</strong></td>
-                            <td>:{{orderview.payment_id}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tracking no</strong></td>
-                            <td>:{{orderview.tracking_no}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ordered date</strong></td>
-                            <td>:{{orderview.created_at}}</td>
-                        </tr>
-                        <tr></tr>
-                        <tr>
-                            <td><strong>Ordder status</strong></td>
-                            <td>:{{orderview.od_status}}</td>
-                        </tr>
+                            <tr>
+                                <td><strong>User Name</strong></td>
+                                <td>{{orderview.user.first_name}}</td>
+                            </tr>
 
-                    </table>
-                    <br> 
-                    <br>
+                            <tr>
+                                <td><strong>Total price</strong></td>
+                                <td>:${{orderview.total_price}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payment method</strong></td>
+                                <td>:{{orderview.payment_mode}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payment id</strong></td>
+                                <td>:{{orderview.payment_id}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tracking no</strong></td>
+                                <td>:{{orderview.tracking_no}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ordered date</strong></td>
+                                <td>:{{orderview.created_at}}</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td><strong>Ordder status</strong></td>
+                                <td>:{{orderview.od_status}}</td>
+                            </tr>
+
+                        </table>
+                        <br>
+                        <br>
+                    </div>
                 </div>
-            </div>
 
             </div>
             {% endif %}
@@ -150,14 +149,34 @@ justify-content: space-between;
                                 <td><b>{{ i.variant.color }}</td>
                                 <td><b>{{ i.variant.size }}</td>
                                 <td><b>{{ i.variant.product.product_price}}</td>
+                                <td><b>{{ i.quantity }}</td>
+                                <td><b><span style="color: brown;">{{ i.status }} </span></td>
+                                    <input type="hidden" class="orderitem_id" value="{{order_item.id}}">
+                                    <td>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <label for="new_status">Order Status:</label>
+                                            <select name="new_status" id="new_status">
+                                                {% for status in order_statuses %}
+                                                    <option value="{{ status.0 }}" {% if order.od_status == status.0 %}selected{% endif %}>{{ status.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="submit">Update Status</button>
+                                        </form>
+                                    
+                                        <p><strong>Expected Delivery:</strong> {{ order.expected_delivery }}</p>
+                                        <p><strong>Created At:</strong> {{ order.created_at }}</p>
+                                        <p><strong>Updated At:</strong> {{ order.update_at }}</p>
+                                    </td>
+
+
+
+
+
+
+
                                 {% endfor %}
 
-                                {% for i in cart %}
-                                <td><b>{{ i.product_qty }}</td>
-
-                                {% endfor %}
-                               
-                                
 
 
                             </tr>

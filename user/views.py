@@ -95,7 +95,7 @@ def user_signup(request):
                         return render(request,'user\signup.html',context ) 
                     
                 elif password1 != password2:
-                    messages.error(request,"password doesn't match")
+                    messages.error(request,"password does not match")
                     context['pre_password1']=''
                     context['pre_password2']='' 
                     return render(request,'user\signup.html',context )
@@ -133,6 +133,7 @@ def user_signup(request):
                 user.save()
                 user_otp=random.randint(100000,999999)
                 request.session['otp']=user_otp
+                print(user_otp,'accounttttttttttttt')
                 mess=f'Hello \t{user.first_name},\nYour OTP to verify your account for Coot is {user_otp}\n Thanks You!'
                 send_mail(
                     "Welcome to Coot , verify your Email",
