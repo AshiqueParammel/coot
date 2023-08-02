@@ -5,7 +5,17 @@ from user.models import CustomUser
 from datetime import timedelta
 # # Create your models here.
 
+class Orderstatus(models.Model):
+    order_status = models.CharField(max_length=60)
 
+    def __str__(self):
+        return self.order_status
+class Itemstatus(models.Model):
+    item_status = models.CharField(max_length=60)
+
+    def __str__(self):
+        return self.item_status
+    
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
@@ -16,16 +26,8 @@ class Order(models.Model):
     tracking_no = models.CharField(max_length=150,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
-    orderstatuses = {
-        ('Pending','Pending'),
-        ('Processing','Processing'),
-        ('Shipped','Shipped'),
-        ('Delivered','Delivered'),
-        ('Cancelled','Cancelled'),
-        ('Return', 'Return')
-       
-    }
-    od_status = models.CharField(max_length=150,choices=orderstatuses, default='Pending')
+    order_status = models.ForeignKey(Orderstatus, on_delete=models.CASCADE ,null=True)
+
     @property
     def expected_delivery(self):
         return self.created_at + timedelta(days=3)
@@ -38,15 +40,9 @@ class OrderItem(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     price = models.FloatField(null=False)
     quantity = models.IntegerField(null=False)
-    orderstatuses = {
-        ('Pending','Pending'),
-        ('Processing','Processing'),
-        ('Shipped','Shipped'),
-        ('Delivered','Delivered'),
-        ('Cancelled','Cancelled'),
-        ('Return', 'Return')
-    }
-    status = models.CharField(max_length=150,choices=orderstatuses, default='Pending')
+    orderitem_status = models.ForeignKey(Itemstatus, on_delete=models.CASCADE,null=True)
+    
+
 
     def __str__(self):
         return f"{self.order.id, self.order.tracking_no}"

@@ -105,9 +105,14 @@
                                 <td>:{{orderview.created_at}}</td>
                             </tr>
                             <tr></tr>
-                            <tr>
+                            <!-- <tr>
                                 <td><strong>Ordder status</strong></td>
-                                <td>:{{orderview.od_status}}</td>
+                                <td>:{{orderview.status}}</td>
+                            </tr> -->
+                            <br>
+                            <tr>
+                                <td><strong></strong></td>
+                                <td></td>
                             </tr>
 
                         </table>
@@ -132,17 +137,21 @@
                                 <th scope="col">price</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Status</th>
+                                <th scope="col">Edit status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for i in products %}
                             <tr>
-                                {% for i in image %}
+                                {% for j in image %}
+                                {% if i.variant.id == j.variant.id %}
                                 <td>
                                     <div style="width: 30px;" class="overflow-hidden">
-                                        <img class="w-100" src=" {{ i.image.url}} " alt="product image">
+                                        <img class="w-100" src=" {{ j.image.url}} " alt="product image">
                                     </div>
                                 </td>
+                                {% else %}
+                                {% endif %}
                                 {% endfor %}
                                 <td><b>{{ i.variant.product.product_name }}</td>
                                 <td><b>{{ i.variant.product.category.categories }}</td>
@@ -150,32 +159,27 @@
                                 <td><b>{{ i.variant.size }}</td>
                                 <td><b>{{ i.variant.product.product_price}}</td>
                                 <td><b>{{ i.quantity }}</td>
-                                <td><b><span style="color: brown;">{{ i.status }} </span></td>
-                                    <input type="hidden" class="orderitem_id" value="{{order_item.id}}">
-                                    <td>
-                                        <form method="post">
-                                            {% csrf_token %}
-                                            <label for="new_status">Order Status:</label>
-                                            <select name="new_status" id="new_status">
-                                                {% for status in order_statuses %}
-                                                    <option value="{{ status.0 }}" {% if order.od_status == status.0 %}selected{% endif %}>{{ status.1 }}</option>
-                                                {% endfor %}
-                                            </select>
-                                            <button type="submit">Update Status</button>
-                                        </form>
-                                    
-                                        <p><strong>Expected Delivery:</strong> {{ order.expected_delivery }}</p>
-                                        <p><strong>Created At:</strong> {{ order.created_at }}</p>
-                                        <p><strong>Updated At:</strong> {{ order.update_at }}</p>
-                                    </td>
 
+                                <td>
+                                    {% if i.orderitem_status.item_status == 'Pending' %}
+                                    <span class="badge rounded-pill alert-secondary status-badge">{{ i.orderitem_status.item_status }}</span>
+                                    {% elif i.orderitem_status.item_status == 'Processing' %}
+                                    <span class="badge rounded-pill alert-warning status-badge">{{ i.orderitem_status.item_status }}</span>
+                                    {% elif i.orderitem_status.item_status == 'Shipped' %}
+                                    <span class="badge rounded-pill alert-primary status-badge">{{ i.orderitem_status.item_status }}</span>
+                                    {% elif i.orderitem_status.item_status == 'Delivered' %}
+                                    <span class="badge rounded-pill alert-success status-badge">{{ i.orderitem_status.item_status }}</span>
+                                    {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
+                                    <span class="badge rounded-pill alert-danger status-badge">{{ i.orderitem_status.item_status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                   
 
-
-
-
-
-
+                                </td>
                                 {% endfor %}
+
+
 
 
 
@@ -188,4 +192,9 @@
             </div>
 
 
-            {% endblock %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

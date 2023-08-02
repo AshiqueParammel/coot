@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'coot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'lotta',
+        'NAME': 'cbb',
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': 'localhost',

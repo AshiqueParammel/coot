@@ -74,10 +74,15 @@
   background-color: #c7c7c7;
   border-color: #c8c8c8;
 }
+.alert-warning {
+  color: #181812;
+  background-color: #fff53f;
+  border-color: #fffc40;
+}
 .alert-primary {
-  color: #30e1f5;
-  background-color: #b9dad8;
-  border-color: #e4fffc;
+  color: #252829;
+  background-color: #3ffff2;
+  border-color: #3cffe8;
 }
 
 .alert-View {
@@ -295,6 +300,19 @@
   <script src="{% static 'adminside/assets/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
   <script src="{% static 'adminside/assets/libs/simplebar/dist/simplebar.js' %}"></script>
   <script src="{% static 'adminside/assets/js/dashboard.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+
+  
+    {% for message in messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    text: "{{ message }}",
+                    timer: 5000, // Adjust the timer to control how long each alert stays visible (in milliseconds)
+                });
+            });
+        </script>
+    {% endfor %}
 </body>
 
 </html>
