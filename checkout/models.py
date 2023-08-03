@@ -26,7 +26,7 @@ class Order(models.Model):
     tracking_no = models.CharField(max_length=150,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
-    order_status = models.ForeignKey(Orderstatus, on_delete=models.CASCADE ,null=True)
+    order_status = models.ForeignKey(Orderstatus, on_delete=models.CASCADE ,null=True,default=1)
 
     @property
     def expected_delivery(self):
@@ -40,7 +40,7 @@ class OrderItem(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     price = models.FloatField(null=False)
     quantity = models.IntegerField(null=False)
-    orderitem_status = models.ForeignKey(Itemstatus, on_delete=models.CASCADE,null=True)
+    orderitem_status = models.ForeignKey(Itemstatus, on_delete=models.CASCADE,null=True,default=1)
     
 
 

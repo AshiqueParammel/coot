@@ -5,15 +5,16 @@
 <main class="main">
     <div class="container-fluid">
         <div class="row">
+            {% if banners %}
             <div class="col-lg-6">
                 <div class="banner banner-big banner-overlay">
                     <a href="#">
-                        <img src="{% static 'home/banner5.png' %}" alt="Banner">
+                        <img src="{{ banners.1.banner_image.url }}" alt="Banner">
                     </a>
 
                     <div class="banner-content banner-content-center">
-                        <h3 class="banner-subtitle text-white"><a href="#">New Collection</a></h3><!-- End .banner-subtitle -->
-                        <h2 class="banner-title text-white"><a href="#">SHOP SHIRT'S</a></h2><!-- End .banner-title -->
+                        <h3 class="banner-subtitle text-white"><a href="#">{{ banners.1.caption }}</a></h3><!-- End .banner-subtitle -->
+                        <h2 class="banner-title text-white"><a href="#">{{banners.1.banner}}</a></h2><!-- End .banner-title -->
                         <a href="#" class="btn underline"><span>Discover Now</span></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
@@ -22,12 +23,12 @@
             <div class="col-lg-6">
                 <div class="banner banner-big banner-overlay">
                     <a href="#">
-                        <img src="{% static 'home/banner-2.jpg' %}" alt="Banner">
+                        <img src="{{ banners.0.banner_image.url }}" alt="Banner">
                     </a>
 
                     <div class="banner-content banner-content-center">
-                        <h3 class="banner-subtitle text-white"><a href="#">New Collection</a></h3><!-- End .banner-subtitle -->
-                        <h2 class="banner-title text-white"><a href="#">SHOP T- SHIRT'S</a></h2><!-- End .banner-title -->
+                        <h3 class="banner-subtitle text-white"><a href="#">{{ banners.0.caption }}</a></h3><!-- End .banner-subtitle -->
+                        <h2 class="banner-title text-white"><a href="#">{{ banners.0.banner }}</a></h2><!-- End .banner-title -->
                         <a href="#" class="btn underline"><span>Discover Now</span></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
@@ -78,7 +79,7 @@
             </div><!-- End .col-lg-4 -->
         </div><!-- End .row -->
     </div><!-- End .container-fluid -->
-
+    {% endif %}
     <div class="icon-boxes-container bg-transparent">
         <div class="container">
             <div class="row justify-content-center">

@@ -13,13 +13,13 @@
                     <div class="col-lg-4 col-md-6 me-auto">
                         <input type="text" placeholder="Search..." class="form-control" />
                     </div>
-                    <div class="col-lg-2 col-6 col-md-3">
+                    <!-- <div class="col-lg-2 col-6 col-md-3">
                         <select class="form-select">
                             <option>status</option>
                             <option>Blocked</option>
                             <option>Verified</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="col-lg-2 col-6 col-md-3">
                         <select class="form-select">
                             <option>Show 20</option>
@@ -55,44 +55,19 @@
                                 <td><a href="{% url 'order_view' i.id %}"><span
                                             class="badge rounded-pill alert-View btn btn ">View</span> </a>
                                 </td>
-
                                 <td>
-                                    {% if i.od_status == 'Pending' %}
-                                    <span class="badge rounded-pill alert-secondary">{{ i.od_status }}</span>
-                                    {% elif i.od_status == 'Processing' %}
-                                    <span class="badge rounded-pill alert-warning">{{ i.od_status }}</span>
-                                    {% elif i.od_status == 'Shipped' %}
-                                    <span class="badge rounded-pill alert-primary">{{ i.od_status }}</span>
-                                    {% elif i.od_status == 'Delivered' %}
-                                    <span class="badge rounded-pill alert-success">{{ i.od_status }}</span>
-                                    {% elif i.od_status == 'Cancelled' or i.od_status == 'Return' %}
-                                    <span class="badge rounded-pill alert-danger">{{ i.od_status }}</span>
+                                    {% if i.order_status.order_status == 'Pending' %}
+                                    <span class="badge rounded-pill alert-secondary">{{ i.order_status.order_status }}</span>
+                                    {% elif i.order_status.order_status == 'Processing' %}
+                                    <span class="badge rounded-pill alert-warning">{{ i.order_status.order_status }}</span>
+                                    {% elif i.order_status.order_status == 'Shipped' %}
+                                    <span class="badge rounded-pill alert-primary">{{ i.order_status.order_status }}</span>
+                                    {% elif i.order_status.order_status == 'Delivered' %}
+                                    <span class="badge rounded-pill alert-success">{{ i.order_status.order_status }}</span>
+                                    {% elif i.order_status.order_status == 'Cancelled' or i.order_status.order_status == 'Return' %}
+                                    <span class="badge rounded-pill alert-danger">{{ i.order_status.order_status }}</span>
                                     {% endif %}
                                 </td>
-                                <td>
-                                    <form id="{% url 'change_status_order' %}" method="post"
-                                        onchange="submitForm(event)">
-                                        {% csrf_token %}
-                                        <input type="hidden" value="{{ i.id }}" name="orderitem_id">
-                                        <select id="status" name="status" class="form-select" style="width: 130px; ">
-                                            <option value="Pending">Pending</option>
-                                            <option value="Processing">Processing</option>
-                                            <option value="Shipped">Shipped</option>
-                                            <option value="Delivered">Delivered</option>
-                                            <option value="Cancelled">Cancelled</option>
-                                            <option value="Return">Return</option>
-                                        </select>
-                                        <br>
-                                    </form>
-
-                                </td>
-
-
-
-
-
-
-
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -103,79 +78,5 @@
             </div>
         </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Add SweetAlert2 CSS and JS files -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
 
-<style>
-    .swal2-popup {
-        font-size: 0.8rem;
-    }
-
-    .swal2-title {
-        font-size: 1rem;
-    }
-
-    .swal2-content {
-        font-size: 0.8rem;
-    }
-</style>
-<script>
-    function submitForm(event) {
-        event.preventDefault();
-
-        var formData = $('#status').closest('form').serialize();
-
-        $.ajax({
-            type: "POST",
-            url: "{% url 'change_status_order' %}",
-            data: formData,
-            success: function (response) {
-                console.log('Status changed successfully!');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Status changed successfully!',
-                });
-
-                var newStatus = $('#status').val(); // Get the newly selected status from the dropdown
-
-                // Update the status badge with the new class and text
-                var statusBadge = $('.status-badge');
-                statusBadge.removeClass().addClass('badge rounded-pill status-badge'); // Remove existing classes
-                switch (newStatus) {
-                    case 'Pending':
-                        statusBadge.addClass('alert-secondary');
-                        break;
-                    case 'Processing':
-                        statusBadge.addClass('alert-warning');
-                        break;
-                    case 'Shipped':
-                        statusBadge.addClass('alert-primary');
-                        break;
-                    case 'Delivered':
-                        statusBadge.addClass('alert-success');
-                        break;
-                    case 'Cancelled':
-                    case 'Return':
-                        statusBadge.addClass('alert-danger');
-                        break;
-                    default:
-                        statusBadge.addClass('alert-secondary');
-                        break;
-                }
-                statusBadge.text(newStatus); // Update the status text
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                console.error('Error changing status: ' + errorThrown);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Failed to change status. Please try again later.',
-                });
-            }
-        });
-    }
-</script>
 {% endblock %}

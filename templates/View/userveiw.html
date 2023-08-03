@@ -3,35 +3,38 @@
 {% load static %}
 {% block dashbody %}
 
-<div class="card">
-    <div class="card-body">
-        <form>
-            {% comment %} {% for u in user %} {% endcomment %}
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">User id</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.id}}">
-            
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">last name</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.first_name}}">
-             
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.email}}">
-              
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Phone number</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{u.phone_numebr}}">
-               
-            </div>
-         
-         {% comment %} {% endfor %} {% endcomment %}
+<h5 class="card-title fw-semibold mb-8"  style="justify-content: center;"> USER DETAILS </h5>
+<div class="col-8-md-8">
+    <div class="card">
 
-        </form>
+        <div class="card-body">
+            <table>
+
+                <tr>
+                    <td><strong>O=USER ID</strong></td>
+                    <td>:{{orderview.id}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>User Name</strong></td>
+                    <td>{{orderview.user.first_name}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>USER EMAIL</strong></td>
+                    <td>:${{orderview.total_price}}</td>
+                </tr>
+                <tr>
+                    <td><strong>USER PHONE NUMBER</strong></td>
+                    <td>:{{orderview.payment_mode}}</td>
+                </tr>
+              
+          
+            </table>
+            <br>
+        </div>
     </div>
+
 </div>
 
 {% endblock %}

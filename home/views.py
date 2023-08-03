@@ -4,9 +4,11 @@ from variant.models import VariantImage, Variant
 from products.models import Product,Size,Color
 from cart.models import Cart
 from django.db.models import Q
+from banner.models import banner
 def home(request):
     categories = category.objects.all()
     products = Product.objects.all()
+    banners =banner.objects.all()
  
 
     # Get unique VariantImage objects based on the associated Product
@@ -15,7 +17,7 @@ def home(request):
 
     
 
-    return render(request, 'home/home.html', {'categories': categories, 'products': products, 'variant_images': variant_images})
+    return render(request, 'home/home.html', {'categories': categories, 'products': products, 'variant_images': variant_images,'banners' :banners})
 
    
 def product_show(request,prod_id,img_id):

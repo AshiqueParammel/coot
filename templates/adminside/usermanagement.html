@@ -45,13 +45,13 @@
           <div class="col-lg-4 col-md-6 me-auto">
             <input type="text" placeholder="Search..." class="form-control" />
           </div>
-          <div class="col-lg-2 col-6 col-md-3">
+          {% comment %} <div class="col-lg-2 col-6 col-md-3">
             <select class="form-select">
               <option>status</option>
               <option>Blocked</option>
               <option>Verified</option>
             </select>
-          </div>
+          </div> {% endcomment %}
           <div class="col-lg-2 col-6 col-md-3">
             <select class="form-select">
               <option>Show 20</option>
@@ -69,10 +69,10 @@
               <tr>
                 <th scope="col">id</th>
                 <th scope="col">Name</th>
-                <th scope="col">Username</th>
+                <th scope="col">Phone number</th>
                 <th scope="col">Email</th>
                 <th scope="col">Status</th>
-                <th scope="col">View</th>
+                <!-- <th scope="col">View</th> -->
                 <th scope="col" class="text-end">Action</th>
               </tr>
             </thead>
@@ -91,8 +91,8 @@
                   <span class="badge rounded-pill alert-warning">Deactive</span>
                   {% endif %}
                 </td>
-                <td><a href="{% url 'user_view' user.id %}"><span
-                      class="badge rounded-pill alert-View btn btn ">View</span> </a></td>
+                {% comment %} <td><a href="{% url 'user_view' user.id %}"><span
+                      class="badge rounded-pill alert-View btn btn ">View</span> </a></td> {% endcomment %}
                 <td class="text-end">
                   {% if user.is_active %}
                   <a href="#" class="btn btn-md rounded font-sm" data-bs-toggle="modal"

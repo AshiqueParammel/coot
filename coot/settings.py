@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'order',
     'shop',
     'checkout',
+    'banner',
+    'offer',
+    'coupon',
     'mathfilters'
     
     
