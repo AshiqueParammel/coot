@@ -20,17 +20,17 @@
 
                     </a>
                 </div>
-                <div class="col-lg-4 col-md-6 me-auto">
+                <!-- <div class="col-lg-4 col-md-6 me-auto">
                     <input type="text" placeholder="Search..." class="form-control" />
-                </div>
+                </div> -->
 
-                <div class="col-lg-2 col-6 col-md-3">
+                <!-- <div class="col-lg-2 col-6 col-md-3">
                     <select class="form-select">
                         <option>sort</option>
                         <option>Show 30</option>
                         <option>Show 40</option>
                     </select>
-                </div>
+                </div> -->
             </div>
         </header>
         <!-- card-header end// -->
@@ -59,7 +59,6 @@
                             <td><b>{{ c.color.color_name }}</b></td>
                             <td><b>{{ c.size.size_range }}</b></td>
                             <td><b>{{ c.quantity }}</b></td>
-                            <!-- <td><b>View</b></td> -->
                             <td><b>{{ Action }}</b></td>
                             <td>
                                 <!-- Button trigger modal -->
@@ -231,7 +230,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="form-outline mb-4">
+                    <div class="form-outline mb-4" >
                         <label class="form-label" for="form3Example3cg">Size</label>
                         <select class="form-select" name="variant_size">
                             {% for c in variant_list.size_range %}

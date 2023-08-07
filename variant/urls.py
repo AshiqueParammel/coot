@@ -15,6 +15,7 @@ urlpatterns=[
         path('image_view/<int:img_id>',views.image_view,name='image_view'),
         path('image_list/<int:variant_id>',views.image_list,name='image_list'),
         path('image_delete/<int:image_id>',views.image_delete,name='image_delete'),
+        path('product_variant_view/<int:product_id>',views.product_variant_view,name='product_variant_view'),
 
 ]
 

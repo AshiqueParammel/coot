@@ -1,10 +1,9 @@
 from django.shortcuts import redirect, render
-from products.models import Product,Size,Color
 from variant.models import Variant,VariantImage
-# from user.models import CustomUser
 from django.http import JsonResponse
 from .models import Cart
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages,auth
 # Create your views here.
 @login_required(login_url='user_login1')
 def cart(request):
@@ -40,21 +39,19 @@ def cart(request):
     else:
         return render(request,'cart/cart.html')
         
-
+@login_required(login_url='user_login1')
 def remove_cart(request,cart_id):
     try:
         cart_remove = Cart.objects.get(id=cart_id)
         
         cart_remove.delete()
+        messages.success(request,'product removed from cart successfully!')
     except:
         return redirect('cart')
-            
-   
-    
-    
+               
     return redirect('cart')
 
-# @login_required(login_url='user_login1')
+@login_required(login_url='user_login1')
 def add_cart(request):
     if request.method =='POST':
         if request.user.is_authenticated:

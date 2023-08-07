@@ -2,7 +2,15 @@
 {% block title %}Product view{% endblock %}
 {% load static %}
 {% block body %}
-
+<style>
+.refa{
+    width: 50%;
+justify-content: center;
+@media (max-width: 600px) {
+    width: 100%;
+}
+}
+</style>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
@@ -86,9 +94,31 @@
 
                             <div class="ratings-container">
                                 <div class="ratings">
+                                    {% if average_rating %}
+                                    {% if average_rating == 5 %}
+                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                    {% elif average_rating == 4 %}
                                     <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                    {% elif average_rating == 3 %}
+
+                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                    {% elif average_rating == 2 %}
+
+                                    <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                    {% elif average_rating == 1 %}
+
+                                    <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                    {% else %}
+
+                                    {% endif %}
+                                    {% endif %}
                                 </div><!-- End .ratings -->
-                                <a class="ratings-text" href="#" id="review-link">( 2 Reviews )</a>
+                                {% if rev_count %}
+                                <a class="ratings-text" href="#" id="review-link">( {{ rev_count}} Reviews )</a>
+                                {% else %}
+                                <a class="ratings-text" href="#" id="review-link">( No Reviews )</a>
+
+                                {% endif %}
                             </div><!-- End .rating-container -->
 
                             <div class="product-price">
@@ -152,9 +182,9 @@
     
                                     <input readonly id="pro_qty{{ item.variant.id }}" class="mtext-104 cl3 txt-center num-product" type="hidden" name="num-product{{ forloop.counter }}" value="{{ item.product_qty }}">
                                         {% endfor %}
-     -->
+                                        -->
                                 <div class="details-action-wrapper">
-                                    <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to
+                                    <a href=""  class="wish-list btn-product btn-wishlist" title="Wishlist" data-product_id="{{ variant.0.variant.id }}"><span>Add to
                                             Wishlist</span></a>
                                     <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to
                                             Compare</span></a>
@@ -187,15 +217,119 @@
                         </div><!-- End .product-details-footer -->
                     </div><!-- End .product-details -->
                 </div><!-- End .col-md-6 -->
-
             </div><!-- End .row -->
         </div><!-- End .product-details-top -->
     </div><!-- End .container -->
+ 
+</div><!-- End .tab-content -->
+</div><!-- End .product-details-tab -->
 
+<div class="container">
+    <div class="product-details-tab">
+        <ul class="nav nav-pills justify-content-center" role="tablist">
+         
+            <li class="nav-item">
+                <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Add Your Review</a>
+            </li>
+            {% if rev_count %}
+            <li class="nav-item">
+                <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews({{ rev_count }}) </a>
+            </li>
+             {% else %}
+            <li class="nav-item">
+                <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews </a>
+            </li>
+            {% endif %}
+        </ul>
+        <div class="tab-content">
+          
+    
+            <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
+                <div class="product-desc-content">
+                  
 
+                    <form action="{% url 'add_review' %}" method="POST" id="review-form"  class="refa">
+                        {% csrf_token %}
+                        <input type="hidden" class="form-control" value="{{ variant.0.variant.id }}" name="img_id" required>
+                        <input type="hidden" class="form-control" value="{{ variant.0.variant.product.id }}" name="product_id" required>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="name" name="email" placeholder="Enter your Email" required>
+                        </div>
+        
+                        <div class="form-group">
+                            <select class="form-control" id="rating" name="rating" required>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star</option>
+                            </select>
+                        </div>
+        
+        
+                        <div class="form-group">
+                           
+                            <textarea class="form-control" id="review-content" name="review" placeholder="review-content" required></textarea>
+                        </div>
+        
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                </div><!-- End .product-desc-content -->
+            </div><!-- .End .tab-pane -->
+            <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
+                <div class="reviews">
+                    <h3>Reviews</h3>
+                {% for i in reviews %}
+                    <div class="review">
+                        <div class="row no-gutters">
+                            <div class="col-auto">
+                                <h4><a href="#">{{ i.name }}</a></h4>
+                                <div class="ratings-container">
+                                    <div class="ratings">
+                                        {% if i.rating == 5 %}
+                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                        {% elif i.rating == 4 %}
+                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                        {% elif i.rating == 3 %}
 
+                                        <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                        {% elif i.rating == 2 %}
 
-    </div><!-- End .page-content -->
+                                        <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                        {% elif i.rating == 1 %}
+
+                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                        {% else %}
+
+                                        {% endif %}
+                                    </div><!-- End .ratings -->
+                                </div><!-- End .rating-container -->
+                                {% comment %} <span class="review-date">5 days ago</span> {% endcomment %}
+                            </div><!-- End .col -->
+                            <div class="col">
+                                <h4>{{ i.email }}</h4>
+
+                                <div class="review-content">
+                                    <p> {{ i.review_text }}</p>
+                                </div><!-- End .review-content -->
+
+                                <div class="review-action">
+                                    {% comment %} <a href="#"><i class="icon-thumbs-up"></i>Helpful (0)</a>
+                                    <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a> {% endcomment %}
+                                </div><!-- End .review-action -->
+                            </div><!-- End .col-auto -->
+                        </div><!-- End .row -->
+                    </div><!-- End .review -->
+                    {% endfor %}
+                </div><!-- End .reviews -->
+            </div><!-- .End .tab-pane -->
+        </div><!-- End .tab-content -->
+    </div><!-- End .product-details-tab -->
+</div><!-- End .container -->
+</div><!-- End .page-content -->
 </main><!-- End .main -->
 <!-- Add this to your HTML head section -->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -224,8 +358,6 @@
 
                 console.log(response);
 
-
-
                 if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in cart' ) {
                     swal.fire("Error!", response.status, "error");
                     $('.cartdata').load(location.href + " .cartdata");
@@ -250,6 +382,50 @@
 </script>
 
 
+<script>
+    $('.wish-list').click(function (e) {
+        e.preventDefault();
+
+        var product_id = $(this).data('product_id');
+        var add_size = $('select[name="size"]').val();
+
+        console.log(product_id,add_size, 'yyyyyyyyyyyyyyyyyyyyyyy1')
+        $.ajax({
+            method: "POST",
+            url: "{% url 'add_wish_list' %}",
+            data: {
+
+                'variant_id': product_id,
+                'add_size':add_size,
+             
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (response) {
+
+                console.log(response);
+
+                if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in Wishlist' ) {
+                    swal.fire("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } else if (response.status === 'Product added successfully in Wishlist') { 
+                    swal.fire("", response.status, "success");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } else if (response.status === 'you are not login please Login to continue') {
+                    swal.fire("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else if (response.status === 'Sorry! this variant not available') {
+                    swal.fire("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else {
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                }
+            }
+        });
+    });
+</script>
 <!-- Add this before the closing </body> tag of your HTML -->
 <script src="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
 

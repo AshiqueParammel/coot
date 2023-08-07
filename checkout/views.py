@@ -23,7 +23,7 @@ def checkout(request):
         
     grand_total = total_price
 
-    address = Address.objects.filter(user= request.user)
+    address = Address.objects.filter(user= request.user,is_available=True)
 
     context = {
         'cartitems': cartitems,

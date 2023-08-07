@@ -11,7 +11,8 @@ urlpatterns=[
     path('View_address/<int:view_id>',views.View_address,name='View_address'),
     path('delete_address/<int:delete_id>',views.delete_address,name='delete_address'),
     path('edit_profile',views.edit_profile,name='edit_profile'),
-    path('change_password',views.change_password,name='change_password'),
+    path('change_password/',views.change_password,name='change_password'),
+    path('order_view_user/<int:view_id>',views.order_view_user,name='order_view_user'),
   
 
     

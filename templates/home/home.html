@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% load static %}
+{% load mathfilters %}
 {% block body %}
 <main class="main">
     <div class="container-fluid">
@@ -209,9 +210,37 @@
                                 </div><!-- End .product-price -->
                                 <div class="ratings-container">
                                     <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                        {% if reviews %}
+                                        {% with count=0 %}
+                                          {% with rating=0 %}
+                                            {% for i in reviews %}
+                                              {% if c.variant.product.id == i.product.id %}
+                                                {% with count=count|add:1 %}
+                                                  {% with rating=rating|add:i.rating %}
+                                                  {% endwith %}
+                                                {% endwith %}
+                                              {% endif %}
+                                            {% endfor %}
+                                          {% endwith %}
+                                          
+                                          {% with rating=rating|intdiv:count %}
+                                            {% if rating == 5 %}
+                                              <div class="ratings-val" style="width: 100%;"></div>
+                                            {% elif rating == 4 %}
+                                              <div class="ratings-val" style="width: 80%;"></div>
+                                            {% elif rating == 3 %}
+                                              <div class="ratings-val" style="width: 60%;"></div>
+                                            {% elif rating == 2 %}
+                                              <div class="ratings-val" style="width: 40%;"></div>
+                                            {% elif rating == 1 %}
+                                              <div class="ratings-val" style="width: 20%;"></div>
+                                            {% else %}
+                                            {% endif %}
+                                          {% endwith %}
+                                          {% endwith %}    
+                                      {% endif %}
                                     </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
+                                    <span class="ratings-text"></span>
                                 </div><!-- End .rating-container -->
 
                                 <div class="product-nav product-nav-dots">

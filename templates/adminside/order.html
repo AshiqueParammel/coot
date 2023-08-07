@@ -46,6 +46,7 @@
                         </thead>
                         <tbody>
                             {% for i in order %}
+
                             <tr>
                                 <td><b>{{ i.id }}</td>
                                 <td><b>{{ i.user.first_name }}</td>
@@ -55,9 +56,9 @@
                                 <td><a href="{% url 'order_view' i.id %}"><span
                                             class="badge rounded-pill alert-View btn btn ">View</span> </a>
                                 </td>
-                                <td>
+                                <td> 
                                     {% if i.order_status.order_status == 'Pending' %}
-                                    <span class="badge rounded-pill alert-secondary">{{ i.order_status.order_status }}</span>
+                                    <span class="badge rounded-pill alert-secondary"  >{{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Processing' %}
                                     <span class="badge rounded-pill alert-warning">{{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Shipped' %}

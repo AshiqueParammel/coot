@@ -248,8 +248,30 @@ def image_delete(request, image_id):
            return redirect('product_variant') 
        
        
+       
+def product_variant_view(request,product_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+  
+    variant=VariantImage.objects.filter(variant__product=product_id)
+    size_range= Size.objects.all().order_by('id')
+    color_name= Color.objects.all().order_by('id')
+    product=Product.objects.all().order_by('id')
+    variant_list={
+        'variant'    :variant,
+        'size_range' :size_range,
+        'color_name' :color_name, 
+         'product'   :product,
+    }
+    # variant_id
+    return render(request,'view/variant_view.html',{'variant_list':variant_list})       
+       
+       
 
     
        
             
 
+
+    
+ 

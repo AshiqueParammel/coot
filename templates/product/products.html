@@ -74,7 +74,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Category</th>
                             <th scope="col">Price</th>
-                            <!-- <th scope="col">View</th> -->
+                            <!-- <th scope="col">Product View</th> -->
                             <th scope="col">Variants</th>
                             <th scope="col"></th>
                             <th scope="col">Action</th>
@@ -90,6 +90,7 @@
                             <td><b>{{ user.product_name }}</td>
                             <td><b>{{ user.category.categories}}</td>
                             <td ><b>{{ user.product_price }}</td>
+                            <!-- <td><a href=" url 'product_variant_view' user.id"><span class="badge rounded-pill alert-View btn btn ">View</span> </a></td> -->
                             <!-- <td><b>{{user.variant.count}}</td> -->
                                 <td><a href="{% url 'product_view' user.id %}"><span class="badge rounded-pill alert-View btn btn ">View</span> </a></td>
 

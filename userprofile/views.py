@@ -7,7 +7,7 @@ from products.models import Product,Size,Color
 from variant.models import Variant,VariantImage
 from user.models import CustomUser
 from .models import Address,Wallet
-from checkout.models import Order,OrderItem
+from checkout.models import Itemstatus, Order,OrderItem
 from django.contrib import messages
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
@@ -19,15 +19,47 @@ from django.contrib.auth import update_session_auth_hash
 def userprofile(request):
     
     user = CustomUser.objects.get(email=request.user.email)
-    address =Address.objects.filter(user=request.user)
-    
-        
+    address =Address.objects.filter(user=request.user,is_available=True )
+    order =Order.objects.filter(user=request.user) 
+    last_order=Order.objects.filter(user=request.user).last()
+    try:
+        wallet =Wallet.objects.get(user=request.user)
+    except:
+       wallet=0   
+
     context={
         'user1':user,
         'address':address,
+        'order':order,
+        'wallet' :wallet,
+        'last_order': last_order,
             
         }
     return render(request,'userprofile/userprofile.html',context)
+
+def order_view_user(request,view_id):
+    try:
+        orderview = Order.objects.get(id=view_id)
+        address = Address.objects.get(id=orderview.address.id)
+        products = OrderItem.objects.filter(order=view_id)
+        variant_ids = [product.variant.id for product in products]
+        image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
+        item_status_o=Itemstatus.objects.all()
+        context = {
+            'orderview': orderview,
+            'address': address,
+            'products': products,
+            'image' :image,
+            'item_status_o' : item_status_o 
+            
+        }
+        return render(request,'userprofile/order_view_user.html',context)
+       
+    except Order.DoesNotExist:
+        print("Order does not exist")
+    except Address.DoesNotExist:
+        print("Address does not exist")
+    return redirect('userprofile')    
 
 
 def add_address(request,add_id):
@@ -137,6 +169,7 @@ def add_address(request,add_id):
         ads.email=email
         ads.state=state
         ads.order_note=order_note
+        ads.is_available=True
         ads.save()
         messages.success(request,' Address Added successfully!')
         if add_id==1:
@@ -233,6 +266,7 @@ def edit_address(request,edit_id):
         ads.email=email
         ads.state=state
         ads.order_note=order_note
+        ads.is_available=True
         ads.save()
         messages.success(request,' Address Edited successfully!')
 
@@ -346,7 +380,8 @@ def change_password(request):
 # delete Address
 def delete_address(request,delete_id):
     address = Address.objects.get(id = delete_id)
-    address.delete()
+    address.is_available = False
+    address.save()
     messages.success(request,' Address deleted successfully!')
     
     return redirect('userprofile')

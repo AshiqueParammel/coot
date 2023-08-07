@@ -2,18 +2,21 @@
 {% block title %}Checkout{% endblock %}
 {% load static %}
 {% block body %}
-
+<style>.page-header {
+    background-image: url('{% static "user/assets/images/page-header-bg.jpg" %}');
+   
+}</style>
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        	<div class="page-header text-center">
         		<div class="container">
-        			<h1 class="page-title">Wishlist<span>Shop</span></h1>
+        			<h1 class="page-title">Wishlist</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'Shop' %}">Shop</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
                     </ol>
                 </div><!-- End .container -->
@@ -24,88 +27,60 @@
 					<table class="table table-wishlist table-mobile">
 						<thead>
 							<tr>
-								<th>Product</th>
+								<th>Product image</th>
+								<th>Product name</th>
+								<th>Size</th>
 								<th>Price</th>
 								<th>Stock Status</th>
 								<th></th>
 								<th></th>
+								
 							</tr>
 						</thead>
 
 						<tbody>
+							{% for i in wishlist %}
 							<tr>
 								<td class="product-col">
 									<div class="product">
 										<figure class="product-media">
-											<a href="#">
-												<img src="assets/images/products/table/product-1.jpg" alt="Product image">
+											<a href="{% url 'product_show' i.variant.product.id i.variant.id %}">
+												{% for j in img %}
+												{% if j.variant.id == i.variant.id %}
+												<img src="{{ j.image.url }}" alt="Variant Image">
+												{% endif %}
+												{% endfor %}
 											</a>
 										</figure>
 
-										<h3 class="product-title">
-											<a href="#">Beige knitted elastic runner shoes</a>
-										</h3><!-- End .product-title -->
+										
 									</div><!-- End .product -->
 								</td>
-								<td class="price-col">$84.00</td>
-								<td class="stock-col"><span class="in-stock">In stock</span></td>
-								<td class="action-col">
-                                    <div class="dropdown">
-									<button class="btn btn-block btn-outline-primary-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="icon-list-alt"></i>Select Options
-                                    </button>
-
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">First option</a>
-                                        <a class="dropdown-item" href="#">Another option</a>
-                                        <a class="dropdown-item" href="#">The best option</a>
-                                      </div>
-                                    </div>
-								</td>
-								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-							</tr>
-							<tr>
-								<td class="product-col">
-									<div class="product">
-										<figure class="product-media">
-											<a href="#">
-												<img src="assets/images/products/table/product-2.jpg" alt="Product image">
-											</a>
-										</figure>
-
-										<h3 class="product-title">
-											<a href="#">Blue utility pinafore denim dress</a>
-										</h3><!-- End .product-title -->
-									</div><!-- End .product -->
-								</td>
-								<td class="price-col">$76.00</td>
-								<td class="stock-col"><span class="in-stock">In stock</span></td>
-								<td class="action-col">
-									<button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
-								</td>
-								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-							</tr>
-							<tr>
-								<td class="product-col">
-									<div class="product">
-										<figure class="product-media">
-											<a href="#">
-												<img src="assets/images/products/table/product-3.jpg" alt="Product image">
-											</a>
-										</figure>
-
-										<h3 class="product-title">
-											<a href="#">Orange saddle lock front chain cross body bag</a>
-										</h3><!-- End .product-title -->
-									</div><!-- End .product -->
-								</td>
-								<td class="price-col">$52.00</td>
+								<td><h3 class="product-title">
+									<a href="{% url 'product_show' i.variant.product.id i.variant.id %}">{{i.variant.product.product_name}}</a>
+								</h3><!-- End .product-title --></td>
+								<td><h3 class="product-title">
+									<a href="{% url 'product_show' i.variant.product.id i.variant.id %}">{{i.variant.size.size_range}}</a>
+								</h3><!-- End .product-title --></td>
+								
+								<td class="price-col">${{i.variant.product.product_price}}</td>
+								{% if i.variant.quantity == 0  %}
 								<td class="stock-col"><span class="out-of-stock">Out of stock</span></td>
+								{% else %}
+								<td class="stock-col"><span class="in-stock">In stock</span></td>
+								{% endif %}
 								<td class="action-col">
-									<button class="btn btn-block btn-outline-primary-2 disabled">Out of Stock</button>
+									<input readonly class="mtext-104 cl3 txt-center num-product" type="hidden"
+									name="num-product" value="1" id="qty-input">
+									<button class="btn btn-block btn-outline-primary-2" data-product_id="{{ i.variant.id }}" data-size-id="{{ i.variant.size.id }}">
+										<i class="icon-cart-plus"></i>Add to Cart
+									</button>
+									
 								</td>
-								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+								<td class="remove-col"><a href="{% url 'remove_wish_list' i.id %}"><button class="btn-remove"><i class="icon-close"></i></button></a></td>
 							</tr>
+							{% endfor %}
+						
 						</tbody>
 					</table><!-- End .table table-wishlist -->
 	            	<div class="wishlist-share">
@@ -121,6 +96,58 @@
             	</div><!-- End .container -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
+
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $('.btn-outline-primary-2').click(function (e) {
+        e.preventDefault();
+
+        var product_id = $(this).data('product_id');
+        var add_qty = $('#qty-input').val();
+        var add_size = $(this).data('size-id');
+
+      
+        console.log(product_id, add_qty,add_size, 'yyyyyyyyyyyyyyyyyyyyyyy1')
+        $.ajax({
+            method: "POST",
+            url: "{% url 'add_cart' %}",
+            data: {
+
+                'variant_id': product_id,
+                'add_size':add_size,
+                'add_qty': add_qty,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (response) {
+
+                console.log(response);
+
+                if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in cart' ) {
+                    swal.fire("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } else if (response.status === 'Product added successfully') { 
+                    swal.fire("", response.status, "success");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } else if (response.status === 'you are not login please Login to continue') {
+                    swal.fire("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else if (response.status === 'Sorry! this variant not available') {
+                    swal.fire("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else {
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                }
+            }
+        });
+    });
+</script>
+
+<script src="https://unpkg.com/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
+
 
 		{% endblock %}
 
