@@ -3,73 +3,54 @@ from categories.models import category
 from variant.models import VariantImage, Variant
 from products.models import Product,Size,Color,ProductReview
 from cart.models import Cart
+from wishlist.models import Wishlist
 from django.db.models import Q 
 from django.db.models import Sum,Avg
 from banner.models import banner
 def home(request):
+    
     categories = category.objects.all()
     products = Product.objects.all()
     banners =banner.objects.all()
-    count=0
-    rating=0
     reviews = ProductReview.objects.all()
-    
-    
-    
-    for review in reviews:
+    ratings = Product.objects.annotate(avg_rating=Avg('reviews__rating'))
+    try:
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
+    except:
+        cart_count =False
+        wishlist_count =False    
+    # for product in ratings:    
+    #     print(f"Product: {product.id}, Avg Rating: {product.avg_rating}")
         
-        if review.product.id == 3:
-            count+=1
-            rating+=review.rating
-            print(count,rating,'checkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
-            
-    if count ==0 and rating==0:
-        avga=0
-        print(avga,'cheeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-    else:       
-        avga=rating//count
-        print(avga,'cheeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-    # annotate
-
-    
- 
-        
-            
-        
-    
-        
-              
-     
-                                         
-   
-    # average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
-    # rev_count=ProductReview.objects.filter(product_id=product.id).count()
-    
-
-    # Get unique VariantImage objects based on the associated Product
-    variant_images = VariantImage.objects.order_by('variant__product').distinct('variant__product')
-    # 'average_rating':average_rating ,'rev_count':rev_count,
-     
-        
-        
-    
-
-    return render(request, 'home/home.html', {'categories': categories, 'products': products,'reviews':reviews, 'variant_images': variant_images,'banners' :banners})
+    variant_images = VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
+    context={'categories': categories,
+             'products': products,
+             'ratings' : ratings,
+             'wishlist_count':wishlist_count,
+             'cart_count':cart_count,
+             'reviews':reviews,
+             'variant_images': variant_images,
+             'banners' :banners}
+    return render(request, 'home/home.html',context )
 
    
 def product_show(request,prod_id,img_id):
   
-    
-    variant = VariantImage.objects.filter(variant=img_id)
-    variant_images = VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__product')
+    variant = VariantImage.objects.filter(variant=img_id,is_available=True)
+    variant_images = VariantImage.objects.filter(variant__product__id=prod_id,is_available=True).distinct('variant__product')
     # size =VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__size')
     size =Size.objects.all()
-    color=VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__color')
-    
+    color=VariantImage.objects.filter(variant__product__id=prod_id,is_available=True).distinct('variant__color')
     reviews = ProductReview.objects.filter(product=prod_id)
     average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
-
     rev_count=ProductReview.objects.filter(product=prod_id).count()
+    try:
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
+    except:
+        cart_count =False
+        wishlist_count =False 
     try:
      average_rating = int(average_rating)
     except:
@@ -82,41 +63,53 @@ def product_show(request,prod_id,img_id):
         'reviews':reviews,
         'average_rating':average_rating ,
         'rev_count':rev_count,
+        'wishlist_count':wishlist_count,
+        'cart_count' :cart_count,
     }
  
-    
     return render(request,'product/product_show.html',context)   
-
 
 def user_category_show(request,category_id):
     
-    variant = VariantImage.objects.filter(variant__product__category=category_id).distinct('variant__color')
+    variant = VariantImage.objects.filter(variant__product__category=category_id,is_available=True).distinct('variant__color')
+    ratings = Product.objects.annotate(avg_rating=Avg('reviews__rating'))
+    try:
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
+    except:
+        cart_count =False
+        wishlist_count =False 
    
-
     context={
-        'variant':variant,   
+        'variant':variant,
+        'ratings' : ratings, 
+        'wishlist_count':wishlist_count,
+        'cart_count' :cart_count,  
     }
     
-    
     return render(request,'category/categoryuser.html',context)   
-
-
-# 
 
 def search_view(request):
     
     search_query = request.POST.get('search')  
-    
-
-    variant_images = VariantImage.objects.filter(variant__product__product_name__icontains=search_query ).distinct('variant__product__product_name')
-
+    variant_images = VariantImage.objects.filter(variant__product__product_name__icontains=search_query,is_available=True ).distinct('variant__product__product_name')
+    ratings = Product.objects.annotate(avg_rating=Avg('reviews__rating'))
+    try:
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
+    except:
+        cart_count =False
+        wishlist_count =False 
     if variant_images :
-       pass
+       if ratings:
+        pass
+       else:
+        ratings=False
     else:
-     
+        
         variant_images=False
 
-    return render(request, 'shop/shop.html', {'variant_images': variant_images})
+    return render(request, 'shop/shop.html', {'variant_images': variant_images,'ratings': ratings, 'wishlist_count':wishlist_count,'cart_count' :cart_count,  })
 
     
     

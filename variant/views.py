@@ -13,10 +13,10 @@ from django.http import JsonResponse
 def product_variant(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    variant = Variant.objects.all().order_by('id') 
-    size_range= Size.objects.all().order_by('id')
-    color_name= Color.objects.all().order_by('id')
-    product=Product.objects.all().order_by('id')
+    variant = Variant.objects.filter(is_available=True).order_by('id') 
+    size_range= Size.objects.filter(is_available=True).order_by('id')
+    color_name= Color.objects.filter(is_available=True).order_by('id')
+    product=Product.objects.filter(is_available=True).order_by('id')
     variant_list={
         'variant'    :variant,
         'size_range' :size_range,
@@ -110,14 +110,16 @@ def prodectvariant_delete(request, variant_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     delete_productvariant = Variant.objects.get(id=variant_id) 
-    delete_productvariant.delete()
+    delete_productvariant.is_available =False
+    delete_productvariant.quantity= 0
+    delete_productvariant.sfilter(is_available=True)
     messages.success(request,'product_variant deleted successfully!')
     return redirect('product_variant')       
     
 def product_size(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')   
-    products_size=Size.objects.all().order_by('id')
+    products_size=Size.objects.filter(is_available =True).order_by('id')
     return render(request,'size_management/size_management.html',{'products_size':products_size})
 
 def add_size(request):
@@ -145,14 +147,15 @@ def size_delete(request, size_range_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     delete_size = Size.objects.get(id=size_range_id) 
-    delete_size.delete()
+    delete_size.is_available=False
+    delete_size.save()
     messages.success(request,'Size deleted successfully!')
     return redirect('product_size') 
 
 def product_color(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')   
-    products_color=Color.objects.all().order_by('id')
+    products_color=Color.objects.filter(is_available=True).order_by('id')
     return render(request,'color_management/color_management.html',{'products_color':products_color})
 
 def add_color(request):
@@ -189,7 +192,8 @@ def color_delete(request, color_name_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     delete_color =Color.objects.get(id=color_name_id) 
-    delete_color.delete()
+    delete_color.is_available =False
+    delete_color.save()
     messages.success(request,'color deleted successfully!')
     return redirect('product_color') 
    
@@ -205,7 +209,7 @@ def image_list(request,variant_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
   
-    image=VariantImage.objects.filter(variant=variant_id)
+    image=VariantImage.objects.filter(variant=variant_id,is_available =True)
     add_image =variant_id
     return render(request,'variant/image_management.html',{'image':image,'add_image':add_image})
     
@@ -239,7 +243,8 @@ def image_delete(request, image_id):
     try:
         delete_image =VariantImage.objects.get(id=image_id)
         var_id= delete_image.variant.id 
-        delete_image.delete()
+        delete_image.is_available=False
+        delete_image.save()
         messages.success(request,'image deleted successfully!')
         image=VariantImage.objects.filter(variant=var_id)
         add_image =var_id
@@ -253,10 +258,10 @@ def product_variant_view(request,product_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
   
-    variant=VariantImage.objects.filter(variant__product=product_id)
-    size_range= Size.objects.all().order_by('id')
-    color_name= Color.objects.all().order_by('id')
-    product=Product.objects.all().order_by('id')
+    variant=VariantImage.objects.filter(variant__product=product_id ,is_available=True)
+    size_range= Size.objects.filter(is_available=True).order_by('id')
+    color_name= Color.objects.filter(is_available=True).order_by('id')
+    product=Product.objects.filter(is_available=True).order_by('id')
     variant_list={
         'variant'    :variant,
         'size_range' :size_range,

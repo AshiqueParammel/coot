@@ -76,7 +76,7 @@
                                                 <input type="hidden"  value="{{ c.variant.size.id }}" id="size-input" >
                                             <a href="" data-product_id="{{ c.variant.id }}" class="btn-product btn-cart add-to-cart-btn"><span>add to cart</span></a>
                                             {% comment %} <a href="{% url 'Quick_view' c.variant.id %}"  class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a> {% endcomment %}
-                                            <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
+                                            <!-- <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a> -->
                                         </div><!-- End .product-action -->
                                     </figure><!-- End .product-media -->
 
@@ -90,9 +90,25 @@
                                         </div><!-- End .product-price -->
                                         <div class="ratings-container">
                                             <div class="ratings">
-                                                <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                                {% for rating in  ratings %}
+                                                {% if c.variant.product.id == rating.id  %}
+                                                {% if rating.avg_rating >= 4.5 %}
+                                                <div class="ratings-val" style="width: 100%;"></div>
+                                              {% elif rating.avg_rating >= 3.5 %}
+                                                <div class="ratings-val" style="width: 80%;"></div>
+                                              {% elif rating.avg_rating >= 2.5 %}
+                                                <div class="ratings-val" style="width: 60%;"></div>
+                                              {% elif rating.avg_rating >= 1.5 %}
+                                                <div class="ratings-val" style="width: 40%;"></div>
+                                              {% elif rating.avg_rating >= 0.5 %}
+                                                <div class="ratings-val" style="width: 20%;"></div>
+                                              {% else %}
+                                              {% endif %}
+                                              {% endif %}
+                                              {% endfor %}
+                                               
                                             </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 0 Reviews )</span>
+                                            <!-- <span class="ratings-text">( 0 Reviews )</span> -->
                                         </div><!-- End .rating-container -->
 
                                         <div class="product-nav product-nav-dots">

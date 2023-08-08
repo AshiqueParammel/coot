@@ -1,5 +1,6 @@
 import csv
 import io
+from django.db.models import Q
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 # from categories.models import category
@@ -29,6 +30,10 @@ from itertools import groupby
 from categories.models import category as Category
 from django.db.models.functions import TruncMonth
 from fpdf import FPDF
+from django.http import HttpResponse
+from datetime import datetime
+from django.db.models import Prefetch
+
 
 
 
@@ -156,8 +161,10 @@ def admin_login1(request):
             return redirect('admin_login1')
     
     return render(request,'adminside/admin_login1.html')    
-
+@login_required(login_url='admin_login1')
 def dashboard(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     
     sales_data = OrderItem.objects.values('order__created_at__date').annotate(total_sales=Sum('price')).order_by('-order__created_at__date')
     # Prepare data for the chart
@@ -268,7 +275,7 @@ def usermanagement_1(request):
     return render(request,'adminside/usermanagement.html',{'users':users})
 
 
-# @login_required(login_url='admin_login1')   
+@login_required(login_url='admin_login1')   
 def blockuser(request,user_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -282,8 +289,10 @@ def blockuser(request,user_id):
     return redirect('usermanagement_1')
 
 
-
+@login_required(login_url='admin_login1')
 def sales_report(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
 
     if request.method=='GET':
         start_date = request.GET.get('start_date')
@@ -332,8 +341,10 @@ def sales_report(request):
 
     return render(request, 'adminside/salesreport.html', {'sales_report': sales_report})
 
-
+@login_required(login_url='admin_login1')
 def export_csv(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=Expenses' + \
         str(datetime.now()) + '.csv'
@@ -362,13 +373,11 @@ def export_csv(request):
     return response
 
 
-
-from django.http import HttpResponse
-from fpdf import FPDF
-from datetime import datetime
-from django.db.models import Prefetch
-
+@login_required(login_url='admin_login1')
 def generate_pdf(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=Expenses' + \
         str(datetime.now()) + '.pdf'
@@ -385,14 +394,11 @@ def generate_pdf(request):
     # Header Information
     pdf.cell(0, 10, 'Order Details Report', 0, 1, 'C')
     pdf.cell(0, 10, str(datetime.now()), 0, 1, 'C')
-
     # Table Data
     data = [['User', 'Total Price', 'Payment Mode', 'Tracking No', 'Ordered At', 'Product Name', 'Product Price', 'Product Quantity']]
-
     orders = Order.objects.all().prefetch_related(
         Prefetch('orderitem_set', queryset=OrderItem.objects.select_related('variant'))
     )
-    
     for order in orders:
         order_items = order.orderitem_set.all()
         for index, order_item in enumerate(order_items):
@@ -406,21 +412,53 @@ def generate_pdf(request):
                 order_item.price,
                 order_item.quantity,
             ])
-
     # Create Table
-    col_width = 40  # Increase the column width to fit the content
+    col_width = 40  
     row_height = 10
-
     for row in data:
         for item in row:
             pdf.cell(col_width, row_height, str(item), border=1)
         pdf.ln()
-
-    response.write(pdf.output(dest='S').encode('latin1'))  # Write the PDF content to the HttpResponse
-
+    response.write(pdf.output(dest='S').encode('latin1'))  
     return response
 
 
+
+
+def user_sort(request):
+    search = request.POST.get('search')
+    if search is None or search.strip() == '':
+        messages.error(request,'Filed cannot empty!')
+        return redirect('usermanagement_1')
+    users = CustomUser.objects.filter(Q(first_name__icontains=search) | Q(email__icontains=search) |Q(phone_number__icontains=search) )
+    if users :
+        pass
+    else:
+        users:False
+        messages.error(request,'Search not found!')
+        return redirect('usermanagement_1')
+    return render(request, 'adminside/usermanagement.html', {'users': users})
+
+        
+   
+def user_block_status(request):
+    name = request.POST.get('name')
+    if name == 'Active':
+        users = CustomUser.objects.filter(is_active=True)
+        return render(request, 'adminside/usermanagement.html', {'users': users})
+    if name ==  'Blocked':
+        users = CustomUser.objects.filter(is_active=False)
+        return render(request, 'adminside/usermanagement.html', {'users': users}) 
+    if name ==  'All':
+        users = CustomUser.objects.all()
+        return render(request, 'adminside/usermanagement.html', {'users': users}) 
+    else:
+        return redirect('usermanagement_1')   
+            
+    
+    
+    
+    
 
 
 

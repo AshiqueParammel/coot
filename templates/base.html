@@ -172,13 +172,19 @@
                         <div class="dropdown cart-dropdown">
                             <a href="{% url 'wish_list' %}" class="dropdown-toggle" role="button">
                                 <i class="icon-star-o"></i>
-                                <span class="cart-count">0</span>
+                                {% if wishlist_count %}
+                                <span class="cart-count">{{wishlist_count}}</span>
+                                {% else %}
+                                {% endif %}
                             </a>
                         </div><!-- End .cart-dropdown -->
                         <div class="dropdown cart-dropdown">
                             <a href="{% url 'cart' %}" class="dropdown-toggle" role="button">
                                 <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">0</span>
+                                {% if cart_count %}
+                                <span class="cart-count">{{cart_count}}</span>
+                                {% else %}
+                                {% endif %}
                             </a>
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
@@ -326,7 +332,7 @@
                         <a href="#">Track order</a>
                     </li>
                     <li>
-                        <a href="#">Compare</a>
+                        <!-- <a href="#">Compare</a> -->
                     </li>
                 </ul>
             </nav><!-- End .mobile-nav -->

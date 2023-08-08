@@ -2,7 +2,12 @@
 {% block title %}User_management{% endblock %}
 {% load static %}
 {% block dashbody %}
-
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<!-- MDB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
 <style>
   .badge {
     display: inline-block;
@@ -43,22 +48,38 @@
       <header class="card-header">
         <div class="row gx-3">
           <div class="col-lg-4 col-md-6 me-auto">
-            <input type="text" placeholder="Search..." class="form-control" />
+            <div class="input-group">
+              <div class="form-outline">
+              <form action="{% url 'user_sort' %}" method="POST">
+                {% csrf_token %}
+                  <input type="search" id="form1" name="search" class="form-control" />
+                  <label class="form-label" for="form1">Search</label>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-search"></i>
+                </button>
+              </form>
+            </div>
+
+
+
+
           </div>
-          {% comment %} <div class="col-lg-2 col-6 col-md-3">
-            <select class="form-select">
-              <option>status</option>
-              <option>Blocked</option>
-              <option>Verified</option>
-            </select>
-          </div> {% endcomment %}
           <div class="col-lg-2 col-6 col-md-3">
-            <select class="form-select">
-              <option>Show 20</option>
-              <option>Show 30</option>
-              <option>Show 40</option>
-            </select>
+            <form id="user-status-form" method="post" action="{% url 'user_block_status' %}">
+              {% csrf_token %}
+              <div class="col-lg-2 col-6 col-md-3">
+                  <select class="form-select" name="name" id="status-select" style="width: 130px;">
+                      <option value="">Status</option>
+                      <option value="Blocked">Blocked</option>
+                      <option value="Active">Active</option>
+                      <option value="All">All</option>
+                  </select>
+              </div>
+              <input type="hidden" name="auto_submit" value="true">
+          </form>
           </div>
+
         </div>
       </header>
       <!-- card-header end// -->
@@ -139,7 +160,15 @@
                 </div>
               </div>
               {% endfor %}
-
+              <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const statusSelect = document.getElementById('status-select');
+                    
+                    statusSelect.addEventListener('change', function () {
+                        document.getElementById('user-status-form').submit();
+                    });
+                });
+            </script>
 
 
               {% endblock %}

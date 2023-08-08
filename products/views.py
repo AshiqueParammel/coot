@@ -14,16 +14,13 @@ from django.contrib.auth.decorators import login_required
 def product(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    product = Product.objects.all().order_by('id') 
+    product = Product.objects.filter(is_available =True).order_by('id') 
    
     
     
     product_list={
         'product' : product,
-        # 'variant'  : variant,
-        'categories' : category.objects.all(),
- 
-       
+        'categories' : category.objects.filter(is_available =True).order_by('id')   
     }
     return render(request,'product/products.html',product_list)
 
@@ -64,15 +61,22 @@ def addproduct(request):
     
     return render(request, 'products/products.html')
 
-
+@login_required(login_url='admin_login1')
 def product_delete(request, product_id):  
     if not request.user.is_superuser:
         return redirect('admin_login1')
     delete_product = Product.objects.get(id=product_id) 
-    delete_product.delete()
+    variants = Variant.objects.filter(product=delete_product)
+    for variant in variants:
+        variant.is_available = False
+        variant.quantity = 0
+        variant.save()
+    delete_product.is_available =False
+    delete_product.save()
     messages.success(request,'product deleted successfully!')
     return redirect('product') 
 
+@login_required(login_url='admin_login1')
 def product_edit(request,product_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -113,7 +117,7 @@ def product_view(request,product_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
   
-    variant=Variant.objects.filter(product=product_id)
+    variant=Variant.objects.filter(product=product_id , is_available=True)
     size_range= Size.objects.all().order_by('id')
     color_name= Color.objects.all().order_by('id')
     product=Product.objects.all().order_by('id')

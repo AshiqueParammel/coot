@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
 from variant.models import Variant,VariantImage
 from django.http import JsonResponse
+
+from wishlist.models import Wishlist
 from .models import Cart
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages,auth
@@ -14,6 +16,8 @@ def cart(request):
         cart = Cart.objects.filter(user=request.user).order_by('id')
         variants = cart.values_list('variant', flat=True)
         img = VariantImage.objects.filter(variant__in=variants).distinct('variant')
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
     
         total_price = 0
         tax = 0
@@ -25,6 +29,7 @@ def cart(request):
             single_product_total+item.variant.product.product_price * item.product_qty
             tax = total_price * 0.18
             grand_total = total_price + tax
+            
 
         context = {
             'cart' : cart,
@@ -33,6 +38,8 @@ def cart(request):
             'grand_total' : grand_total,
             'single_product_total':single_product_total,
             'img':img,
+            'wishlist_count':wishlist_count, 
+            'cart_count':cart_count,
         }
         
         return render(request,'cart/cart.html',context)
@@ -51,7 +58,7 @@ def remove_cart(request,cart_id):
                
     return redirect('cart')
 
-@login_required(login_url='user_login1')
+# @login_required(login_url='user_login1')
 def add_cart(request):
     if request.method =='POST':
         if request.user.is_authenticated:

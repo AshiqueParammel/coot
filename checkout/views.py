@@ -1,6 +1,8 @@
 import random
 import string
 from django.shortcuts import redirect, render
+
+from wishlist.models import Wishlist
 from .models import Order, OrderItem
 from products.models import Product,Size,Color
 from variant.models import Variant,VariantImage
@@ -24,12 +26,17 @@ def checkout(request):
     grand_total = total_price
 
     address = Address.objects.filter(user= request.user,is_available=True)
+    cart_count =Cart.objects.filter(user =request.user).count()
+    wishlist_count =Wishlist.objects.filter(user=request.user).count()
 
     context = {
         'cartitems': cartitems,
         'total_price': total_price,
         'grand_total': grand_total,
-        'address': address,   
+        'address': address,
+        'wishlist_count':wishlist_count,
+        'cart_count' :cart_count,   
+        
     }
     if total_price==0:
        return redirect('home')
@@ -104,8 +111,9 @@ def placeorder(request):
         payment_mode = request.POST.get('payment_method')
         if payment_mode == 'cod' or payment_mode == 'razorpay' :
             
+    
             return JsonResponse({'status': "Your order has been placed successfully"})
-        
+    
         
         
     return redirect('checkout')

@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 import logging
+
+from products.models import Product
+from variant.models import Variant
 from .models import category
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
@@ -10,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 def categories(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    categories = category.objects.all().order_by('id')
+    categories = category.objects.filter(is_available=True).order_by('id')
     return render(request, 'category/category.html', {'categories': categories})
 
 
@@ -92,7 +95,20 @@ def deletecategory(request,deletecategory_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     categery = category.objects.get(id=deletecategory_id)
-    categery.delete()
+    products = Product.objects.filter(category=categery)
+    for product in products:
+        product.is_available = False
+        product.save()
+
+    variants = Variant.objects.filter(product=product)
+    for variant in variants:
+        variant.is_available = False
+        variant.quantity = 0
+        variant.save()
+
+    categery.is_available = False
+    categery.save()
+
     messages.success(request,'category deleted successfully!')
     return redirect('categories')
 
@@ -118,7 +134,19 @@ def search_category(request):
             return render(request, 'category/category.html', {'message': message})
     else:
         return render(request, '404.html')
-
+def category_search(request):
+    search = request.POST.get('search')
+    if search is None or search.strip() == '':
+        messages.error(request,'Filed cannot empty!')
+        return redirect('categories')
+    search_categories = category.objects.filter(categories__icontains=search,is_available=True )
+    if search_categories :
+        pass
+        return render(request, 'category/category.html', {'search_categories': search_categories})
+    else:
+        categories:False
+        messages.error(request,'Search not found!')
+        return redirect('categories')
 
   
 

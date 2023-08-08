@@ -8,6 +8,7 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" type="image/png" href="{% static 'images/icons/icon.png' %}" />
   <link rel="stylesheet" href="{% static 'adminside/assets/css/styles.min.css' %}" />
+
 </head>
 <style>
   .message {
@@ -285,17 +286,17 @@
                   <div class="message-body">
                     <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-user fs-6"></i>
-                      <p class="mb-0 fs-3">My Profile</p>
+                      <p class="mb-0 fs-3" style="font-size: 0.78rem!important">My Profile</p>
                     </a>
                     <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-mail fs-6"></i>
-                      <p class="mb-0 fs-3">My Account</p>
+                      <p class="mb-0 fs-3" style="font-size: 0.78rem!important">My Account</p>
                     </a>
                     <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p>
+                      <p class="mb-0 fs-3" style="font-size: 0.78rem!important">My Task</p>
                     </a>
-                    <a href="{% url 'admin_logout1' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    <a href="{% url 'admin_logout1' %}" class="btn btn-outline-primary mx-3 mt-2 d-block" style="font-size: 0.78rem!important">Logout</a>
                   </div>
                 </div>
               </li>

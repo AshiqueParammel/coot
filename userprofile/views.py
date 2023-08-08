@@ -3,9 +3,11 @@ from django.forms import ValidationError
 from django.shortcuts import render,redirect
 from django.views.decorators.cache import cache_control,never_cache
 from django.contrib.auth.decorators import login_required
+from cart.models import Cart
 from products.models import Product,Size,Color
 from variant.models import Variant,VariantImage
 from user.models import CustomUser
+from wishlist.models import Wishlist
 from .models import Address,Wallet
 from checkout.models import Itemstatus, Order,OrderItem
 from django.contrib import messages
@@ -21,6 +23,8 @@ def userprofile(request):
     user = CustomUser.objects.get(email=request.user.email)
     address =Address.objects.filter(user=request.user,is_available=True )
     order =Order.objects.filter(user=request.user) 
+    cart_count =Cart.objects.filter(user =request.user).count()
+    wishlist_count =Wishlist.objects.filter(user=request.user).count()
     last_order=Order.objects.filter(user=request.user).last()
     try:
         wallet =Wallet.objects.get(user=request.user)
@@ -33,6 +37,9 @@ def userprofile(request):
         'order':order,
         'wallet' :wallet,
         'last_order': last_order,
+        'wishlist_count':wishlist_count, 
+        'cart_count':cart_count,
+        
             
         }
     return render(request,'userprofile/userprofile.html',context)
@@ -45,12 +52,16 @@ def order_view_user(request,view_id):
         variant_ids = [product.variant.id for product in products]
         image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
         item_status_o=Itemstatus.objects.all()
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
         context = {
             'orderview': orderview,
             'address': address,
             'products': products,
             'image' :image,
-            'item_status_o' : item_status_o 
+            'item_status_o' : item_status_o ,
+            'wishlist_count':wishlist_count, 
+            'cart_count':cart_count,
             
         }
         return render(request,'userprofile/order_view_user.html',context)
@@ -65,6 +76,9 @@ def order_view_user(request,view_id):
 def add_address(request,add_id):
 
     if request.method == 'POST':
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
+        
 
         first_name=request.POST.get('firstname')
         last_name=request.POST.get('lastname')
@@ -89,6 +103,8 @@ def add_address(request,add_id):
             'pre_state':state,
             'pre_order_note':order_note,
             'check':add_id,
+            'wishlist_count':wishlist_count, 
+            'cart_count':cart_count,
     
                 }
 
@@ -180,16 +196,19 @@ def add_address(request,add_id):
             return redirect('checkout')
         
 
-        
+    cart_count =Cart.objects.filter(user =request.user).count()
+    wishlist_count =Wishlist.objects.filter(user=request.user).count()    
     if add_id==1:
         check=1
     else: 
         check=2    
-    return render(request,'userprofile/add_address.html',{'check':check})
+    return render(request,'userprofile/add_address.html',{'check':check,'wishlist_count':wishlist_count,'cart_count':cart_count,})
 
 def edit_address(request,edit_id):
 
     if request.method == 'POST':
+        cart_count =Cart.objects.filter(user =request.user).count()
+        wishlist_count =Wishlist.objects.filter(user=request.user).count()
 
         first_name=request.POST.get('firstname')
         last_name=request.POST.get('lastname')
@@ -275,8 +294,9 @@ def edit_address(request,edit_id):
         editaddress=Address.objects.get(id=edit_id)
     except:
         return redirect('userprofile')
-            
-    return render(request,'userprofile/edit_address.html',{'editaddress':editaddress})
+    cart_count =Cart.objects.filter(user =request.user).count()
+    wishlist_count =Wishlist.objects.filter(user=request.user).count()        
+    return render(request,'userprofile/edit_address.html',{'editaddress':editaddress, 'wishlist_count':wishlist_count,'cart_count':cart_count,})
 
 
 def View_address(request,view_id):
