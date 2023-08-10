@@ -112,43 +112,22 @@ def deletecategory(request,deletecategory_id):
     messages.success(request,'category deleted successfully!')
     return redirect('categories')
 
-# Search Category
-@login_required(login_url='admin_login1')
-def search_category(request):
-    if not request.user.is_superuser:
-        return redirect('admin_login1')
-    if 'keyword' in request.GET:
-        keyword = request.GET['keyword']
-        if keyword:
-            cate = category.objects.filter(categories__icontains=keyword).order_by('id')
-            if cate.exists():
-                context = {
-                    'category': cate,
-                }
-                return render(request, 'category/category.html', context)
-            else:
-                message = "Category not found"
-                return render(request, 'category/category.html', {'message': message})
-        else:
-            message = "Please enter a valid search keyword"
-            return render(request, 'category/category.html', {'message': message})
-    else:
-        return render(request, '404.html')
 def category_search(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':
         messages.error(request,'Filed cannot empty!')
         return redirect('categories')
-    search_categories = category.objects.filter(categories__icontains=search,is_available=True )
-    if search_categories :
+    categories = category.objects.filter(categories__icontains=search,is_available=True )
+    if categories :
         pass
-        return render(request, 'category/category.html', {'search_categories': search_categories})
+        return render(request, 'category/category.html', {'categories': categories})
     else:
         categories:False
         messages.error(request,'Search not found!')
         return redirect('categories')
 
   
+
 
         
        

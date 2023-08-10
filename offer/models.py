@@ -6,6 +6,7 @@ class Offer(models.Model):
     discount_amount = models.PositiveIntegerField()
     start_date = models.DateField(default=timezone.now)  # Use DateField instead of DateTimeField
     end_date = models.DateField(default=timezone.now)
+    is_available = models.BooleanField(default=True)
 
     def __str__(self):
         return self.offer_name

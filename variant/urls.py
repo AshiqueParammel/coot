@@ -8,6 +8,7 @@ urlpatterns=[
         path('size_delete/<int:size_range_id>',views.size_delete,name='size_delete'),
         path('product_color',views.product_color,name='product_color'),
         path('add_color',views.add_color,name='add_color'),
+        path('variant_search',views.variant_search,name='variant_search'),
         path('color_delete/<int:color_name_id>',views.color_delete,name='color_delete'),
         path('add_Product_Variant',views.add_Product_Variant,name='add_Product_Variant'),
         path('edit_prodectvariant/<int:variant_id>',views.edit_prodectvariant,name='edit_prodectvariant'),

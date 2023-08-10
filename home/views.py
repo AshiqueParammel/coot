@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from categories.models import category
 from variant.models import VariantImage, Variant
 from products.models import Product,Size,Color,ProductReview
@@ -8,6 +8,9 @@ from django.db.models import Q
 from django.db.models import Sum,Avg
 from banner.models import banner
 def home(request):
+    
+    if request.user.is_superuser:
+        return redirect('dashboard')
     
     categories = category.objects.all()
     products = Product.objects.all()

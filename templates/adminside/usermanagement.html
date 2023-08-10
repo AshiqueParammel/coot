@@ -87,7 +87,7 @@
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
-              <tr>
+              <tr class="text-uppercase">
                 <th scope="col">id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Phone number</th>
@@ -99,7 +99,7 @@
             </thead>
             <tbody>
               {% for user in users %}
-              <tr>
+              <tr class="text-uppercase">
                 <td style="text-align: center;">{{ user.id }}</td>
                 <td><b>{{ user.first_name }}</td>
                 <td><b>{{ user.username }}</td>

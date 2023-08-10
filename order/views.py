@@ -6,6 +6,7 @@ from products.models import Product
 from userprofile.models import Address, Wallet
 from variant.models import Variant,VariantImage
 from cart.models import Cart
+from django.db.models import Q
 from django.contrib import messages
 # Create your views here.
 
@@ -209,7 +210,7 @@ def order_cancel(request,cancel_id):
         # print(return_id,'rrrrrrrrrrrrrrrrrrrrrrrrrrr')
         options = request.POST.get('options')
         reason = request.POST.get('reason')
-# validation
+        # validation
        
              
         if options.strip() == '':
@@ -289,11 +290,73 @@ def order_cancel(request,cancel_id):
         
         messages.success(request,'your order Cancelled successfully! ')
         return redirect('order_view_user',view_id)
-        return redirect('userprofile')
+    return redirect('userprofile')
     
     
     
+def order_search(request):
+    search = request.POST.get('search')
+    if search is None or search.strip() == '':
+        messages.error(request,'Filed cannot empty!')
+        return redirect('order_list')
+    order = Order.objects.filter(Q(user__first_name__icontains=search) | Q(created_at__icontains=search) |Q(total_price__icontains=search) )
+    context={'order':order,}
+    if order :
+        pass
+    else:
+        order:False
+        messages.error(request,'Search not found!')
+        return redirect('order_list')
+    return render(request,'adminside/order.html',context)
 
-
+   
+def order_status_show(request):
+    name = request.POST.get('name')
+    if name == 'Pending':
+        order = Order.objects.filter(order_status=1)
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+    if name == 'Processing':
+        order = Order.objects.filter(order_status=2)
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+    if name == 'Shipped':
+        order = Order.objects.filter(order_status=3)
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+    if name == 'Delivered':
+        order = Order.objects.filter(order_status=4)
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+    if name == 'Cancelled':
+        order = Order.objects.filter(order_status=5)
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+    if name == 'Return':
+        order = Order.objects.filter(order_status=6)
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+    if name == 'All':
+        order =Order.objects.all().order_by('id')
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+   
+    else:
+        return redirect('order_list')   
+    
+def order_payment_sort(request):
+    name = request.POST.get('name')
+    if name == 'cod':
+        order = Order.objects.filter(payment_mode='cod')
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+    if name == 'razorpay':
+        order = Order.objects.filter(payment_mode='razorpay')
+        context={'order':order,}   
+        return render(request,'adminside/order.html',context)
+  
+   
+    else:
+        return redirect('order_list')       
 
 

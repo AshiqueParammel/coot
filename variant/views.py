@@ -8,6 +8,7 @@ from django.views.decorators.cache import cache_control
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import ImageForm
 from django.http import JsonResponse
+from django.db.models import Q
 # Create your views here.
     
 def product_variant(request):
@@ -269,7 +270,30 @@ def product_variant_view(request,product_id):
          'product'   :product,
     }
     # variant_id
-    return render(request,'view/variant_view.html',{'variant_list':variant_list})       
+    return render(request,'view/variant_view.html',{'variant_list':variant_list})   
+
+def variant_search(request):
+    search = request.POST.get('search')
+    if search is None or search.strip() == '':
+        messages.error(request,'Filed cannot empty!')
+        return redirect('product_variant')
+    variant = Variant.objects.filter( Q(product__product_name__icontains=search) | Q(color__color_name__icontains=search) |Q(size__size_range__icontains=search)| Q(quantity__icontains=search), is_available=True) 
+    size_range= Size.objects.filter(is_available=True).order_by('id')
+    color_name= Color.objects.filter(is_available=True).order_by('id')
+    product=Product.objects.filter(is_available=True).order_by('id')
+    variant_list={
+        'variant'    :variant,
+        'size_range' :size_range,
+        'color_name' :color_name, 
+         'product'   :product,
+    }
+    if variant :
+        pass
+        return render(request,'variant/variant.html',{'variant_list':variant_list}) 
+    else:
+        variant:False
+        messages.error(request,'Search not found!')
+        return redirect('product_variant')    
        
        
 

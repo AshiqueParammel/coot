@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from categories.models import category
+from offer.models import Offer
 
 class Color(models.Model):
     color_name = models.CharField(max_length=50)
@@ -27,6 +28,7 @@ class Product(models.Model):
     category = models.ForeignKey(category, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=250, unique=True)
     product_description = models.TextField(max_length=50,default="")
+    offer = models.ForeignKey(Offer, on_delete=models.SET_NULL, null=True )
     is_available = models.BooleanField(default=True)
 
     def __str__(self):

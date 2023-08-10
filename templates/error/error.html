@@ -1,0 +1,70 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <title>Coot</title> -->
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Coot">
+    <meta name="author" content="p-themes">
+    <title>Error</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/icons/icon.png' %}">
+
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="{% static 'user/assets/images/icons/browserconfig.xml' %}">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{% static 'user/assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'user/assets/css/plugins/owl-carousel/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'user/assets/css/plugins/magnific-popup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'user/assets/css/plugins/jquery.countdown.css' %}">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'user/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'user/assets/css/skins/skin-demo-7.css' %}">
+    <link rel="stylesheet" href="{% static 'user/assets/css/demos/demo-7.css' %}">
+</head>
+<body>
+    
+
+ 
+
+        	<div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
+            	<div class="container">
+                    {% if status1 %}
+            		<h1 class="error-title">Error {{ status1 }}</h1><!-- End .error-title -->
+                    {% endif %}
+            		<p>We are sorry, the page you've requested is not available.</p>
+            		<a href="{% url 'home' %}" class="btn btn-outline-primary-2 btn-minwidth-lg">
+            			<span>BACK TO HOMEPAGE</span>
+            			<i class="icon-long-arrow-right"></i>
+            		</a>
+            	</div><!-- End .container -->
+        	</div><!-- End .error-content text-center -->
+        </main><!-- End .main -->
+
+    </body>
+        <script src="{% static 'user/assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/jquery.hoverIntent.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/superfish.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/bootstrap-input-spinner.js' %}"></script>
+        <script src="{% static 'user/assets/js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/jquery.plugin.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/jquery.magnific-popup.min.js' %}"></script>
+        <script src="{% static 'user/assets/js/jquery.countdown.min.js' %}"></script>
+        <!-- Main JS File -->
+        <script src="{% static 'user/assets/js/main.js' %}"></script>
+        <script src="{% static 'user/assets/js/demos/demo-7.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+</html>        
