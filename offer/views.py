@@ -3,6 +3,7 @@ from .models import Offer
 from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 # offer
@@ -22,7 +23,7 @@ def add_offer(request):
         end_date_str = request.POST.get('end_date')
         # print(offername,discount,start_date_str,end_date_str,'yesyes sssssssssssssssss')
         if offername is None or offername.strip() == '':
-            messages.error(request, "Cannot blank order name!")
+            messages.error(request, "Cannot blank offer name!")
             return redirect('offer')
         if discount.strip() == '':
             messages.error(request, "Cannot blank Discount!")
@@ -93,10 +94,6 @@ def edit_offer(request, offer_id):
     }
     return render(request, 'adminside/offer.html', context)
 
-
-
-
-
 def delete_offer(request, delete_id):
     try:
         offer = Offer.objects.get(id=delete_id)  
@@ -106,3 +103,19 @@ def delete_offer(request, delete_id):
     except Offer.DoesNotExist:
         messages.error(request, "The specified offer does not exist.")
     return redirect('offer')
+
+def offer_search(request):
+    search = request.POST.get('search')
+    if search is None or search.strip() == '':
+        messages.error(request,'Filed cannot empty!')
+        return redirect('offer')
+    offer = Offer.objects.filter(Q(offer_name__icontains=search) | Q(discount_amount__icontains=search) |Q(start_date__icontains=search)|Q(end_date__icontains=search),is_available =True)
+    context={ 'offer' : offer,}
+         
+    if offer :
+        pass
+        return render (request,'adminside/offer.html',context)
+    else:
+        offer:False
+        messages.error(request,'Search not found!')
+        return redirect('offer')

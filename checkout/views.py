@@ -1,6 +1,7 @@
 import random
 import string
 from django.shortcuts import redirect, render
+from coupon.models import Coupon
 
 from wishlist.models import Wishlist
 from .models import Order, OrderItem
@@ -14,8 +15,33 @@ from user.models import CustomUser
 from django.contrib import messages
 
 def checkout(request):
+    if request.method == 'POST':
+        coupon = request.POST.get('coupon')
+        if coupon is None:
+            messages.error(request, 'coupon field is cannot empty!')
+            return redirect('checkout')
+        try:
+            check_coupons =Coupon.objects.filter(coupon_code=coupon).first()
+            cartitems = Cart.objects.filter(user=request.user)
+    
+            total_price = 0
+
+            for item in cartitems:
+                product_price = item.variant.product.product_price
+                
+                total_price += product_price * item.product_qty
+            grand_total = total_price
+            if grand_total>=check_coupons.min_price:
+                total_price +=total_price-check_coupons.coupon_discount_amount
+                messages.success(request, 'This coupon added successfully!')
+            else:
+                total_price     
+        except:
+            messages.error(request, 'This coupon not valid!')
+            return redirect('checkout')
     
     cartitems = Cart.objects.filter(user=request.user)
+    
     total_price = 0
 
     for item in cartitems:
@@ -131,3 +157,4 @@ def razarypaycheck(request):
     for item in cart:
         total_price = total_price + item.variant.product.product_price * item.product_qty
     return JsonResponse({'total_price': total_price})
+

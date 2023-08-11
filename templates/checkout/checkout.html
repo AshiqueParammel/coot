@@ -19,7 +19,9 @@
 		flex-direction: row;
 		justify-content: space-between;
         margin-left: 10px;
+       
 	}
+    
 </style>
 
 <main class="main">
@@ -110,6 +112,21 @@
 
                             </div><!-- End .card-dashboard -->
                             {% endfor %}
+                            <h5>Discount Coupon</h5>
+                            <div class="cart-bottom">
+                                <div class="cart-discount">
+                                    <form action="{% url 'checkout' %}">
+                                        
+                                        <div class="input-group">
+                                            <input type="text" id="coupon-code" class="form-control"  name="coupen" placeholder="Enter coupon code">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-primary-2" style="height: fit-content;" type="submit"><i class="icon-long-arrow-right"></i></button>
+                                            </div><!-- .End .input-group-append -->
+                                        </div><!-- .End .input-group -->
+                                    </form>
+                                </div>
+                            </div>
+                            
 
                         </div><!-- End .col-lg-6 -->
 
@@ -118,9 +135,11 @@
 
                         <aside class="col-lg-4">
                             <div class="summary">
+                              
                                 <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
                                   {% if cartitems %}
                                 <table class="table table-summary">
+                                    
                                     <thead>
                                         <tr>
                                             <th>Product</th>
@@ -220,8 +239,7 @@
                                         </div><!-- End .collapse -->
                                     </div><!-- End .card -->
                                 </div><!-- End .accordion -->
-                               
-                                
+            
                                 <button type="submit"  class="btn btn-outline-primary-2 purchase placeorder " id="orderform"><span> Place Order
                                    </span><i class="icon-long-arrow-right"></i></button>
                             </div><!-- End .summary -->

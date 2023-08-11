@@ -4,7 +4,7 @@ from django.utils import timezone
 class Offer(models.Model):
     offer_name = models.CharField(max_length=100)
     discount_amount = models.PositiveIntegerField()
-    start_date = models.DateField(default=timezone.now)  # Use DateField instead of DateTimeField
+    start_date = models.DateField(default=timezone.now)  
     end_date = models.DateField(default=timezone.now)
     is_available = models.BooleanField(default=True)
 
