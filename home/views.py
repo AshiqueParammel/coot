@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from categories.models import category
+from offer.models import Offer
 from variant.models import VariantImage, Variant
 from products.models import Product,Size,Color,ProductReview
 from cart.models import Cart
@@ -27,6 +28,7 @@ def home(request):
     #     print(f"Product: {product.id}, Avg Rating: {product.avg_rating}")
         
     variant_images = VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
+    
     context={'categories': categories,
              'products': products,
              'ratings' : ratings,

@@ -2,6 +2,7 @@
 {% block title %}Shop{% endblock %}
 {% load static %}
 {% block body %}
+{% load mathfilters %}
 
 <style>.page-header {
     background-image: url('{% static "user/assets/images/page-header-bg.jpg" %}');
@@ -87,9 +88,15 @@
                                             <a href="#"></a>
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="{% url 'product_show' c.variant.product.id c.variant.id %}">{{c.variant.product.product_name}}</a></h3><!-- End .product-title -->
+                                        {% if c.variant.product.offer %}
                                         <div class="product-price">
-                                            ${{c.variant.product.product_price}}  
+                                            <del style="color: brown;">${{ c.variant.product.product_price }} </del>  <span style="color:white;">--</span> <span style="color: black;">${{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
                                         </div><!-- End .product-price -->
+                                        {% else %}
+                                        <div class="product-price" >
+                                            <span style="color: black;">${{c.variant.product.product_price}}</span>
+                                        </div><!-- End .product-price -->
+                                        {% endif %}
                                         <div class="ratings-container">
                                             <div class="ratings">
                                                 {% for rating in  ratings %}
