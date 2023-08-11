@@ -73,7 +73,12 @@
                                     </td>
                                     <td class="price-col">{{i.variant.color.color_name}}</td>
                                     <td class="price-col">{{i.variant.size.size_range}}</td>
+                                    {% if i.variant.product.offer %}
+                                    <td class="price-col"><del style="color: brown;" >${{i.variant.product.product_price}}</del> <span>${{i.variant.product.product_price|sub:i.variant.product.offer.discount_amount}}</span></td>
+
+                                    {% else %}
                                     <td class="price-col">${{i.variant.product.product_price}}</td>
+                                    {% endif %}
                                     <td class="quantity-col product_data">
                                         <div class="input-group quantity mx-auto " style="width: 100px;">
                                             <div class="input-group-btn changeQuantity " data-variantid="{{i.id}}">
@@ -95,8 +100,9 @@
                                             {% if single %}
                                             {{ single }}
                                             {% else %}
-                                            {{i.single_total}}
+                                            {{i.single_total }}
                                             {% endif %}
+                                            
                                         </span>
                                     </td>
 

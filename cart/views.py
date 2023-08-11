@@ -23,13 +23,25 @@ def cart(request):
         tax = 0
         grand_total =0
         single_product_total = 0
+        offer_total_price =0
+        single_total_offer=0
         for item in cart:
+            if item.variant.product.offer:   
+                total_price = total_price + item.variant.product.product_price * item.product_qty
+                offer_total_price = offer_total_price + item.variant.product.offer.discount_amount * item.product_qty
+                single_product_total+item.variant.product.product_price * item.product_qty
+                single_total_offer =single_total_offer+item.variant.product.offer.discount_amount * item.product_qty
+                
+
+            else:    
+                total_price = total_price + item.variant.product.product_price * item.product_qty
+                single_product_total+item.variant.product.product_price * item.product_qty
+                
+                
+        single_product_total =single_product_total-single_total_offer
+        total_price=total_price-offer_total_price
+        grand_total = total_price 
         
-            total_price = total_price + item.variant.product.product_price * item.product_qty
-            single_product_total+item.variant.product.product_price * item.product_qty
-            tax = total_price * 0.18
-            grand_total = total_price + tax
-            
 
         context = {
             'cart' : cart,
@@ -91,7 +103,12 @@ def add_cart(request):
                 variant_qty = add_qty
                 
                 if variant_check.quantity >= variant_qty:
-                    total = variant_qty*variant_check.product.product_price
+                    if variant_check.product.offer:
+                        product_offer =variant_qty*variant_check.product.offer.discount_amount
+                        total = variant_qty*variant_check.product.product_price
+                        total = total -product_offer
+                    else:   
+                        total = variant_qty*variant_check.product.product_price
                     Cart.objects.create(user=request.user, variant_id=variant_id, product_qty=variant_qty,single_total=total)
     
                     return JsonResponse({'status': 'Product added successfully'})
@@ -116,15 +133,29 @@ def update_cart(request):
             cartes = cart.variant.quantity
             if int(cartes) >= int(prod_qty):
                 cart.product_qty = prod_qty
-                single=cart.single_total =prod_qty*cart.variant.product.product_price
+                if cart.variant.product.offer:
+                    offer_price =prod_qty*cart.variant.product.offer.discount_amount
+                    single=prod_qty*cart.variant.product.product_price
+                    single =single-offer_price
+                    cart.single_total = single
+                else:    
+                    single=cart.single_total =prod_qty*cart.variant.product.product_price
            
                 
                 cart.save()
 
                 carts = Cart.objects.filter(user = request.user).order_by('id')
                 total_price = 0
+                offer_price = 0
                 for item in carts:
-                    total_price = total_price + item.variant.product.product_price * item.product_qty
+                    if item.variant.product.offer:
+                        total_price = total_price + item.variant.product.product_price * item.product_qty
+                        offer_price = item.variant.product.offer.discount_amount * item.product_qty
+                    else:
+                        total_price = total_price + item.variant.product.product_price * item.product_qty
+                        
+                            
+                total_price =total_price-offer_price
                 
                     
                 return JsonResponse({'status': 'Updated successfully','sub_total':total_price,'single':single, 'product_price':cart.variant.product.product_price,'quantity':prod_qty})
