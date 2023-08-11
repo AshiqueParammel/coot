@@ -15,6 +15,7 @@ from user.models import CustomUser
 from django.contrib import messages
 
 def checkout(request):
+    request.session['coupon_session']=0
     if request.method == 'POST':
         coupon = request.POST.get('coupon')
         if coupon is None:
@@ -32,10 +33,42 @@ def checkout(request):
                 total_price += product_price * item.product_qty
             grand_total = total_price
             if grand_total>=check_coupons.min_price:
-                total_price +=total_price-check_coupons.coupon_discount_amount
+                # total_price +=total_price-check_coupons.coupon_discount_amount
+                coupon=check_coupons.coupon_discount_amount
+                request.session['coupon_session']= coupon
+                
+                
                 messages.success(request, 'This coupon added successfully!')
             else:
-                total_price     
+                coupon=False 
+                messages.error(request, ' purchase minimum price!')    
+                
+            address = Address.objects.filter(user= request.user,is_available=True)
+            cart_count =Cart.objects.filter(user =request.user).count()
+            wishlist_count =Wishlist.objects.filter(user=request.user).count()
+            coupon_checkout =Coupon.objects.filter(is_available=True)
+            
+
+            context = {
+                'coupon_checkout':coupon_checkout,
+                'cartitems': cartitems,
+                'total_price': total_price,
+                'grand_total': grand_total,
+                'address': address,
+                'wishlist_count':wishlist_count,
+                'cart_count' :cart_count,   
+                'coupon':coupon
+                
+            }
+            if total_price==0:
+                return redirect('home')
+            else:
+                return render(request,'checkout/checkout.html',context)
+                
+             
+                
+                
+                 
         except:
             messages.error(request, 'This coupon not valid!')
             return redirect('checkout')
@@ -54,14 +87,18 @@ def checkout(request):
     address = Address.objects.filter(user= request.user,is_available=True)
     cart_count =Cart.objects.filter(user =request.user).count()
     wishlist_count =Wishlist.objects.filter(user=request.user).count()
+    coupon_checkout =Coupon.objects.filter(is_available=True)
+    coupon =False
 
     context = {
+        'coupon_checkout':coupon_checkout,
         'cartitems': cartitems,
         'total_price': total_price,
         'grand_total': grand_total,
         'address': address,
         'wishlist_count':wishlist_count,
-        'cart_count' :cart_count,   
+        'cart_count' :cart_count,  
+        'coupon':coupon
         
     }
     if total_price==0:
@@ -79,6 +116,7 @@ def placeorder(request):
         
         user = request.user
         # Retrieve the address ID from the form data
+        coupon = request.POST.get('couponOrder')
         address_id = request.POST.get('address')
         if address_id is None:
             messages.error(request, 'Address field is mandatory!')
@@ -101,8 +139,11 @@ def placeorder(request):
         for item in cart_items:
             product_price = item.variant.product.product_price
             cart_total_price += product_price * item.product_qty
-            
-            
+        # print(coupon,'asdfghjkjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')    
+        
+        
+        coupon =int(coupon)   
+        cart_total_price = cart_total_price - coupon 
         neworder.total_price = cart_total_price
 
         # Generate a unique tracking number
@@ -156,5 +197,10 @@ def razarypaycheck(request):
     total_price = 0
     for item in cart:
         total_price = total_price + item.variant.product.product_price * item.product_qty
+    session_coupon=request.session.get('coupon_session')
+    total_price = total_price - session_coupon  
+    del request.session['coupon_session']  
+ 
+         
     return JsonResponse({'total_price': total_price})
 

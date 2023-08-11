@@ -21,6 +21,22 @@
         margin-left: 10px;
        
 	}
+    .checoupon{
+        margin-top: -80px;
+
+    }
+.spshafi{
+
+    margin-left: 120px;
+}
+    @media (max-width: 986px) {
+       .spshafi {margin-left: 0px;
+        }
+        .checoupon{
+            margin-top: 0px;
+    
+        }
+    }
     
 </style>
 
@@ -51,6 +67,23 @@
     <div class="page-content">
         <div class="checkout">
             <div class="container">
+               
+                <div class="spshafi lg-2" >
+                    <div class="cart-discount">
+                        <h5>Discount Coupon</h5>
+                        <form action="{% url 'checkout' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" id="coupon-code" class="form-control"  name="coupon" placeholder="Enter coupon code">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary-2" style="height: fit-content;" type="submit"><i class="icon-long-arrow-right"></i></button>
+                                </div><!-- .End .input-group-append -->
+                            </div><!-- .End .input-group -->
+                        </form>
+                    </div>
+                </div>
+                <br>
+
                 
               <form action="{% url 'placeorder' %}" method="POST" id="orderform">
                 {% csrf_token %}
@@ -112,20 +145,7 @@
 
                             </div><!-- End .card-dashboard -->
                             {% endfor %}
-                            <h5>Discount Coupon</h5>
-                            <div class="cart-bottom">
-                                <div class="cart-discount">
-                                    <form action="{% url 'checkout' %}">
-                                        
-                                        <div class="input-group">
-                                            <input type="text" id="coupon-code" class="form-control"  name="coupen" placeholder="Enter coupon code">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-primary-2" style="height: fit-content;" type="submit"><i class="icon-long-arrow-right"></i></button>
-                                            </div><!-- .End .input-group-append -->
-                                        </div><!-- .End .input-group -->
-                                    </form>
-                                </div>
-                            </div>
+                           
                             
 
                         </div><!-- End .col-lg-6 -->
@@ -134,8 +154,39 @@
                         </div><!-- End .col-lg-2 -->
 
                         <aside class="col-lg-4">
-                            <div class="summary">
+                            <div class="summary checoupon">
+
+                                
+                                <h3 class="summary-title">Now Available Coupon</h3><!-- End .summary-title -->
+                                <table class="table table-summary">
+                                    <thead>
+                                        <th>Coupon name</th>
+                                        <th>Coupon code</th>
+                                        <th>Min purchase</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for c in coupon_checkout %}
+                                        {% if c.is_coupon_expired %}
+                                        {% else %}
+                                        <tr>
+                                            <td>{{ c.coupon_name }}</td>
+                                            <td>{{ c.coupon_code }}</td>
+                                            <td>{{ c.min_price }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <br>
+                                
+
+                         
+                            <div class="summary checoupon">
                               
+                               
+                               
                                 <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
                                   {% if cartitems %}
                                 <table class="table table-summary">
@@ -160,16 +211,35 @@
                                         {% endfor %}
                                        
                                         <tr class="summary-subtotal">
+                                            {% if coupon %}
+                                        <tr>
                                             <td>Subtotal:</td>
                                             <td>${{total_price}}</td>
+                                        </tr>
+                                        <tr> 
+                                            <td>coupon applied:</td>
+                                            <input type="hidden" name="couponcheck" value="{{coupon}}">
+                                            <td>${{coupon}}</td>
+                                        </tr>
+
+                                            {% else %}
+                                            <td>Subtotal:</td>
+                                            <input type="hidden" name="couponcheck" value="{{0}}">
+                                            <td >${{total_price}}</td>
+                                            {% endif %}
                                         </tr><!-- End .summary-subtotal -->
                                         <tr>
                                             <td>Shipping:</td>
                                             <td>Free shipping</td>
                                         </tr>
                                         <tr class="summary-total">
+                                            {% if coupon %}
+                                            <td>Total:</td>
+                                            <td>${{ grand_total|sub:coupon }}</td>
+                                            {% else %}
                                             <td>Total:</td>
                                             <td>${{grand_total}}</td>
+                                            {% endif %}
                                         </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->
@@ -270,6 +340,7 @@
               var fname = $("[name='first_name']").val();
               var phone = $("[name='phone']").val();
               var email = $("[name='email']").val();
+              var couponOrder = $("[name='couponcheck']").val();
               var order_note = $("[name='ordernote']").val();
               var token = $("[name='csrfmiddlewaretoken']").val();
               var selectedAddress = $("input[name='address']:checked").val();
@@ -285,7 +356,9 @@
                     return false;    
               } else {
                   var data = {
+
                       "payment_method": paymentMethod,
+                      "couponOrder": couponOrder,
                       "order_note": order_note,
                       "address": selectedAddress,
                       "csrfmiddlewaretoken": token
