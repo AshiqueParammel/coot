@@ -147,7 +147,11 @@ def coupon_search(request):
     if search is None or search.strip() == '':
         messages.error(request,'Filed cannot empty!')
         return redirect('coupon_delete')
-    coupon = Coupon.objects.filter(Q(coupon_name__icontains=search) | Q(coupon_code__icontains=search)| Q(min_price__icontains=search) | Q(coupon_discount_amount__icontains=search)|Q(start_date__icontains=search)|Q(end_date__icontains=search),is_available =True)
+    coupon = (
+        Coupon.objects.filter(Q(coupon_name__icontains=search) | Q(coupon_code__icontains=search)|
+                              Q(min_price__icontains=search) | Q(coupon_discount_amount__icontains=search)|
+                              Q(start_date__icontains=search)|Q(end_date__icontains=search),is_available =True) 
+        )
     context={ 'coupon' : coupon,}
          
     if coupon:

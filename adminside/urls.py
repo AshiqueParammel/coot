@@ -16,6 +16,7 @@ urlpatterns=[
     path('generate_pdf/',views.generate_pdf,name='generate_pdf'),
     path('user_sort/',views.user_sort,name='user_sort'),
     path('user_block_status/',views.user_block_status,name='user_block_status'),
+    path('contact_view/',views.contact_view,name='contact_view'),
 
    
     

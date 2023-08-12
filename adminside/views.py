@@ -16,6 +16,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login ,logout
 from checkout.models import OrderItem
+from home.models import Contacts
 from order.models import Order
 # verification email
 from user.models import UserOTP,CustomUser
@@ -458,7 +459,14 @@ def user_block_status(request):
         return redirect('usermanagement_1')   
             
     
+def contact_view(request):
+    contact =Contacts.objects.all()
+    context ={
+        'contact':contact
+    }
     
+    return render(request, 'adminside/contacts.html', context)
+        
     
     
 

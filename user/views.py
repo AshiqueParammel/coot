@@ -67,7 +67,8 @@ def user_signup(request):
                         'pre_password2':password2
                 }
                 
-                if phonenumber.strip()=='' or password1.strip()==''or password2.strip()==''  or email.strip()=='' or firstname.strip()=='' or lastname.strip()=='' :
+                if (phonenumber.strip()=='' or password1.strip()==''or password2.strip
+                    ()==''  or email.strip()=='' or firstname.strip()=='' or lastname.strip()=='') :
                     messages.error(request,'field cannot empty!')
                     return render(request,'user\signup.html',context )
                 
