@@ -173,7 +173,9 @@ def dashboard(request):
     
     return_data = OrderItem.objects.filter(orderitem_status__item_status__in=["Return", "Cancelled"]).values('order__created_at__date').annotate(total_returns=Sum('price')).order_by('-order__created_at__date')
     return_values = [item['total_returns'] for item in return_data]
+    orders =Order.objects.order_by('-created_at')[:10]
     context = {
+        'orders':orders,
         'categories': categories,
         'sales_values': sales_values,
          'return_values': return_values,

@@ -204,29 +204,72 @@
                                             <td><a href="#">{{i.variant.product.product_name}}</a></td>
                                             {% comment %} <td></td>
                                             <td><a href="#">{{i.product_qty}}</a></td> {% endcomment %}
+                                            {% if i.variant.product.offer %}
+                                            
+                                            {% with product_total=i.variant.product.product_price|mul:i.product_qty  offer_total=i.variant.product.offer.discount_amount|mul:i.product_qty %}
+                                            <td><span><del>${{i.variant.product.product_price |mul:i.product_qty}} </del> </span>${{ product_total|sub:offer_total }} </td>
+                                            {% endwith %}
+                                            {% else %}
                                             <td>${{i.variant.product.product_price |mul:i.product_qty}}</td>
-                                          
+                                            {% endif %}
                                             
                                         </tr>
                                         {% endfor %}
                                        
                                         <tr class="summary-subtotal">
-                                            {% if coupon %}
-                                        <tr>
-                                            <td>Subtotal:</td>
-                                            <td>${{total_price}}</td>
-                                        </tr>
-                                        <tr> 
-                                            <td>coupon applied:</td>
-                                            <input type="hidden" name="couponcheck" value="{{coupon}}">
-                                            <td>${{coupon}}</td>
-                                        </tr>
+                                            {% if coupon and offer %}
+                                            <tr>
+                                                <td>Subtotal:</td>
+                                                <td>${{total_price|add:offer}}</td>
+                                            </tr>
+                                           
+                                            <tr> 
+                                             <td>coupon applied:</td>
+                                                <input type="hidden" name="couponcheck" value="{{coupon}}">
+                                                <td>${{coupon}}</td>
+                                            </tr>
+
+                                            <tr> 
+                                                <td>offer applied:</td>
+                                                <input type="hidden" name="" value="">
+                                                <td>${{offer}}</td>
+                                            </tr>
+
 
                                             {% else %}
-                                            <td>Subtotal:</td>
-                                            <input type="hidden" name="couponcheck" value="{{0}}">
-                                            <td >${{total_price}}</td>
-                                            {% endif %}
+                                                {% if coupon %}
+                                            <tr>
+                                                <td>Subtotal:</td>
+                                                <td>${{total_price}}</td>
+                                            </tr>
+                                            <tr> 
+                                                <td>coupon applied:</td>
+                                                <input type="hidden" name="couponcheck" value="{{coupon}}">
+                                                <td>${{coupon}}</td>
+                                            </tr>
+                                                {% else %}
+                                                <input type="hidden" name="couponcheck" value="{{0}}">
+                                                {% endif %}
+                                                {% if offer %}
+                                                <tr>
+                                                    <td>Subtotal:</td>
+                                                    <td>${{total_price}}</td>
+                                                </tr>
+                                                <tr> 
+                                                    <td>offer applied:</td>
+                                                    <input type="hidden" name="" value="">
+                                                    <td>${{offer}}</td>
+                                                </tr>
+                                                {% else %}
+                                                <input type="hidden" name="" value="">
+                                                {% endif %}
+                                                {% endif %}
+                                                {% if not offer and not coupon %}
+                                                <tr>
+                                                    <td>Subtotal:</td>
+                                                    <td>${{total_price}}</td>
+                                                </tr>
+                                                {% endif %}
                                         </tr><!-- End .summary-subtotal -->
                                         <tr>
                                             <td>Shipping:</td>

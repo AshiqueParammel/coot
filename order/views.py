@@ -233,9 +233,16 @@ def order_cancel(request,cancel_id):
         cancelled= Order_Cancelled.objects.create(user = request.user, order = order, options=options, reason=reason)
         
 
-        if order.payment_mode == 'Razorpay' or order.payment_mode == 'wallet' :
+        if order.payment_mode == 'razorpay' or order.payment_mode == 'wallet' :
             order = Order.objects.get(id=view_id)
-            total_price = order.total_price
+            if variant.product.offer:
+                total_price = variant.product.product_price *qty
+                offer_price =variant.product.offer.discount_amount *qty
+                total_price = total_price-offer_price
+            else:   
+                
+                total_price = variant.product.product_price * qty
+                
 
             try:
                 wallet = Wallet.objects.get(user=request.user)
