@@ -56,6 +56,7 @@ def product_show(request,prod_id,img_id):
     # size =VariantImage.objects.filter(variant__product__id=prod_id).distinct('variant__size')
     size =Size.objects.all()
     color=VariantImage.objects.filter(variant__product__id=prod_id,is_available=True).distinct('variant__color')
+    
     reviews = ProductReview.objects.filter(product=prod_id)
     average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
     rev_count=ProductReview.objects.filter(product=prod_id).count()

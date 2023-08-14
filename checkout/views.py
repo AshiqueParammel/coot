@@ -16,6 +16,8 @@ from django.contrib import messages
 
 def checkout(request):
     request.session['coupon_session']=0
+    request.session['coupon_id']= None
+    
     if request.method == 'POST':
         coupon = request.POST.get('coupon')
         if coupon is None:
@@ -42,7 +44,11 @@ def checkout(request):
             if grand_total>=check_coupons.min_price:
                 
                 coupon=check_coupons.coupon_discount_amount
+                coupon_id=check_coupons.id
+                
                 request.session['coupon_session']= coupon
+                request.session['coupon_id']= coupon_id
+                
                 
                 
                 messages.success(request, 'This coupon added successfully!')
@@ -153,6 +159,9 @@ def placeorder(request):
         neworder.user = user
         neworder.payment_mode = request.POST.get('payment_method')
         neworder.message = request.POST.get('order_note')
+        session_coupon_id=request.session.get('coupon_id')
+        neworder.coupon = session_coupon_id
+        
 
         # Calculate the cart total price 
         cart_items = Cart.objects.filter(user=user)
@@ -196,7 +205,8 @@ def placeorder(request):
                 order=neworder,
                 variant=item.variant,
                 price=item.variant.product.product_price,
-                quantity=item.product_qty
+                quantity=item.product_qty,
+                
             )
 
             # Decrease the product quantity from the available stock
@@ -210,7 +220,7 @@ def placeorder(request):
         payment_mode = request.POST.get('payment_method')
         if payment_mode == 'cod' or payment_mode == 'razorpay' :
             del request.session['coupon_session']
-            
+            del request.session['coupon_id']
             
     
             return JsonResponse({'status': "Your order has been placed successfully"})

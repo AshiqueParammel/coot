@@ -1,4 +1,5 @@
 from django.db import models
+from coupon.models import Coupon
 from userprofile.models import Address
 from variant.models import VariantImage,Variant
 from user.models import CustomUser
@@ -27,6 +28,8 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
     order_status = models.ForeignKey(Orderstatus, on_delete=models.CASCADE ,null=True,default=1)
+    coupon = models.ForeignKey(Coupon,on_delete=models.CASCADE,null=True )
+    return_total_price=models.IntegerField(null=True)
 
     @property
     def expected_delivery(self):
@@ -41,6 +44,7 @@ class OrderItem(models.Model):
     price = models.FloatField(null=False)
     quantity = models.IntegerField(null=False)
     orderitem_status = models.ForeignKey(Itemstatus, on_delete=models.CASCADE,null=True,default=1)
+    
     
 
 

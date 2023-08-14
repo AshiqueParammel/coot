@@ -184,17 +184,43 @@ def return_order(request,return_id):
         change_all_items_status.order_status = item_status_instance_all
         change_all_items_status.save()
         
+        
         returnorder = Orderreturn.objects.create(user = request.user, order = order_id, options=options, reason=reason)
+        order = Order.objects.filter(id=view_id).first()
+        if variant.product.offer:
+            total_price = variant.product.product_price *qty
+            offer_price =variant.product.offer.discount_amount *qty
+            total_price = total_price-offer_price
+        else:   
+            
+            total_price = variant.product.product_price * qty
+        if order.return_total_price:
+            pass
+        else:    
+            order.return_total_price =int(order.total_price )
+        order.return_total_price = order.return_total_price - total_price    
+        if order.coupon:
+            if order.return_total_price <order.coupon.min_price:
+                total_price =total_price - order.coupon.coupon_discount_amount
+                order.coupon = None     
+            else:
+                pass   
+        else:
+            pass 
+        if order.return_total_price<0:
+                order.return_total_price =None          
+        order.save()
         try:
             wallet = Wallet.objects.get(user=request.user)
-            wallet.wallet += total_p
+            wallet.wallet += total_price
             wallet.save()
         except Wallet.DoesNotExist:
-            wallet = Wallet.objects.create(user=request.user, wallet=total_p)
+            wallet = Wallet.objects.create(user=request.user, wallet=total_price)
+        
         orderitem_id.save()
         messages.success(request,'your order Return successfully! ')
         return redirect('order_view_user',view_id)
-        return redirect('userprofile')
+        # return redirect('userprofile')
     
     return redirect('order_view_user',view_id)
    
@@ -235,6 +261,8 @@ def order_cancel(request,cancel_id):
 
         if order.payment_mode == 'razorpay' or order.payment_mode == 'wallet' :
             order = Order.objects.get(id=view_id)
+            
+                
             if variant.product.offer:
                 total_price = variant.product.product_price *qty
                 offer_price =variant.product.offer.discount_amount *qty
@@ -242,8 +270,26 @@ def order_cancel(request,cancel_id):
             else:   
                 
                 total_price = variant.product.product_price * qty
-                
-
+            if order.return_total_price:
+                pass
+            else:    
+                order.return_total_price =int(order.total_price )
+            order.return_total_price = order.return_total_price - total_price 
+              
+            if order.coupon:
+                if order.return_total_price <order.coupon.min_price:
+                    total_price =total_price - order.coupon.coupon_discount_amount
+                    order.coupon = None  
+                # elif order.return_total_price == 0:
+                #     total_price =total_price - order.coupon.coupon_discount_amount 
+                #     order.coupon = None      
+                else:
+                    pass   
+            else:
+                pass 
+            if order.return_total_price<0:
+                order.return_total_price =None          
+            order.save()
             try:
                 wallet = Wallet.objects.get(user=request.user)
                 wallet.wallet += total_price
