@@ -151,11 +151,12 @@ def update_cart(request):
                     if item.variant.product.offer:
                         total_price = total_price + item.variant.product.product_price * item.product_qty
                         offer_price = item.variant.product.offer.discount_amount * item.product_qty
+                        total_price =total_price-offer_price
                     else:
                         total_price = total_price + item.variant.product.product_price * item.product_qty
                         
                             
-                total_price =total_price-offer_price
+                
                 
                     
                 return JsonResponse({'status': 'Updated successfully','sub_total':total_price,'single':single, 'product_price':cart.variant.product.product_price,'quantity':prod_qty})

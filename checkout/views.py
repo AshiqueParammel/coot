@@ -30,16 +30,20 @@ def checkout(request):
             total_price = 0
             offer_price = 0
             offer_price_total=0
+            all_offer =0
             for item in cartitems:
                 if item.variant.product.offer:
                     product_price = item.variant.product.product_price
                     total_price += product_price * item.product_qty
                     offer_price = item.variant.product.offer.discount_amount
                     offer_price_total =offer_price*item.product_qty
+                    total_price= total_price - offer_price_total
+                    all_offer= all_offer+offer_price_total
                 else:     
                     product_price = item.variant.product.product_price
                     total_price += product_price * item.product_qty
-            total_price= total_price - offer_price_total
+                    
+           
             grand_total = total_price
             if grand_total>=check_coupons.min_price:
                 
@@ -60,12 +64,13 @@ def checkout(request):
             cart_count =Cart.objects.filter(user =request.user).count()
             wishlist_count =Wishlist.objects.filter(user=request.user).count()
             coupon_checkout =Coupon.objects.filter(is_available=True)
-            if offer_price_total ==0:
+            if offer_price_total == 0:
                 offer_price_total =False
             else:
                 offer_price_total
 
             context = {
+                'all_offer':all_offer,
                 'offer' :offer_price_total,
                 'coupon_checkout':coupon_checkout,
                 'cartitems': cartitems,
@@ -95,17 +100,21 @@ def checkout(request):
     total_price = 0
     offer_price = 0
     offer_price_total=0
+    all_offer= 0
     for item in cartitems:
         if item.variant.product.offer:
             product_price = item.variant.product.product_price
             total_price += product_price * item.product_qty
             offer_price = item.variant.product.offer.discount_amount
             offer_price_total =offer_price*item.product_qty
+            total_price= total_price - offer_price_total
+            all_offer= all_offer+offer_price_total
         else:     
             product_price = item.variant.product.product_price
             total_price += product_price * item.product_qty
-    total_price= total_price 
-    grand_total = total_price - offer_price_total
+    
+    
+    grand_total = total_price 
 
     address = Address.objects.filter(user= request.user,is_available=True)
     cart_count =Cart.objects.filter(user =request.user).count()
@@ -118,6 +127,7 @@ def checkout(request):
         offer_price_total
 
     context = {
+        'all_offer':all_offer,
         'offer' :offer_price_total,
         'coupon_checkout':coupon_checkout,
         'cartitems': cartitems,
@@ -174,6 +184,7 @@ def placeorder(request):
                 cart_total_price += product_price * item.product_qty
                 offer_total_price =item.variant.product.offer.discount_amount
                 offer_total_price = offer_total_price*item.product_qty
+                cart_total_price = cart_total_price - offer_total_price  
                 
             else:    
                 product_price = item.variant.product.product_price
@@ -182,7 +193,7 @@ def placeorder(request):
         
     
         
-        cart_total_price = cart_total_price - offer_total_price  
+        
         session_coupon=request.session.get('coupon_session')
         cart_total_price = cart_total_price - session_coupon
         neworder.total_price = cart_total_price
@@ -244,11 +255,12 @@ def razarypaycheck(request):
         if item.variant.product.offer:
             total_price = total_price + item.variant.product.product_price * item.product_qty
             total_offer = item.variant.product.offer.discount_amount*item.product_qty
+            total_price = total_price-total_offer
         else:    
             total_price = total_price + item.variant.product.product_price * item.product_qty
     session_coupon=request.session.get('coupon_session')
     total_price = total_price - session_coupon  
-    total_price = total_price-total_offer
+    
       
  
          

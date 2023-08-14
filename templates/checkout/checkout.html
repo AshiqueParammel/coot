@@ -220,7 +220,7 @@
                                             {% if coupon and offer %}
                                             <tr>
                                                 <td>Subtotal:</td>
-                                                <td>${{total_price|add:offer}}</td>
+                                                <td>${{total_price|add:all_offer}}</td>
                                             </tr>
                                            
                                             <tr> 
@@ -232,7 +232,7 @@
                                             <tr> 
                                                 <td>offer applied:</td>
                                                 <input type="hidden" name="" value="">
-                                                <td>${{offer}}</td>
+                                                <td>${{all_offer}}</td>
                                             </tr>
 
 
@@ -253,12 +253,12 @@
                                                 {% if offer %}
                                                 <tr>
                                                     <td>Subtotal:</td>
-                                                    <td>${{total_price}}</td>
+                                                    <td>${{total_price|add:all_offer}}</td>
                                                 </tr>
                                                 <tr> 
                                                     <td>offer applied:</td>
                                                     <input type="hidden" name="" value="">
-                                                    <td>${{offer}}</td>
+                                                    <td>${{ all_offer }}</td>
                                                 </tr>
                                                 {% else %}
                                                 <input type="hidden" name="" value="">
