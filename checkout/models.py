@@ -3,7 +3,7 @@ from coupon.models import Coupon
 from userprofile.models import Address
 from variant.models import VariantImage,Variant
 from user.models import CustomUser
-from datetime import timedelta
+from datetime import timedelta, timezone
 # # Create your models here.
 
 class Orderstatus(models.Model):
@@ -33,7 +33,8 @@ class Order(models.Model):
 
     @property
     def expected_delivery(self):
-        return self.created_at + timedelta(days=3)
+        return self.created_at + timedelta(days=4)
+    
 
     def __str__(self):
         return f"{self.id, self.tracking_no}"

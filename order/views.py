@@ -174,7 +174,7 @@ def return_order(request,return_id):
             elif total_count == Return:
                 total_value = 6
             else:
-                total_value = 1    
+                total_value = 4   
         
         except:
             return redirect('order_view',view_id)

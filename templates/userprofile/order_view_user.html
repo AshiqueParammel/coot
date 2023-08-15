@@ -224,9 +224,13 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    
                                     {% if i.orderitem_status.item_status == 'Delivered' %}
-                                   
+                                    
+                                    {% if date %}
+
                                     <a href="#signin-modal-{{ forloop.counter }}" data-toggle="modal"><span class="btn btn-outline-primary-2" >Return</span></a>
+                                    
                                     <div class="modal fade" id="signin-modal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
@@ -282,9 +286,11 @@
                                             </div><!-- End .modal-content -->
                                         </div><!-- End .modal-dialog -->
                                     </div><!-- End .modal -->
-                                
-
+                                    {% else %}
+                                    {% endif %}
                                     
+
+                                  
                                     {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
                                     {% comment %} <a href=""><span class="btn btn-outline-primary-2"></span></a> {% endcomment %}
                                     {% else %}

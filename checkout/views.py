@@ -55,6 +55,7 @@ def checkout(request):
                 
                 
                 
+                
                 messages.success(request, 'This coupon added successfully!')
             else:
                 coupon=False 
@@ -170,7 +171,8 @@ def placeorder(request):
         neworder.payment_mode = request.POST.get('payment_method')
         neworder.message = request.POST.get('order_note')
         session_coupon_id=request.session.get('coupon_id')
-        neworder.coupon = session_coupon_id
+        session_coupons =Coupon.objects.get(id=session_coupon_id)
+        neworder.coupon = session_coupons
         
 
         # Calculate the cart total price 

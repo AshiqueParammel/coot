@@ -15,6 +15,10 @@ class Custom404Middleware:
         if response.status_code == 500:
             status1 =500
             return render(request, 'error/error.html',{'status1':status1}, status=500)
+        if response.status_code == 502:
+            status1 =500
+            return render(request, 'error/error.html',{'status1':status1}, status=502)
+        
         
 
         return response

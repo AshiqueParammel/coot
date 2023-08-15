@@ -3,6 +3,33 @@
 {% load static %}
 {% load mathfilters %}
 {% block body %}
+<style>
+ 
+
+    @media (max-width: 800px) {
+        .container-fluid.hy {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+    
+        .container-fluid.hy > div {
+            flex: 0 0 calc(33.333% - 20px);
+            margin: 10px;
+        }
+    
+        .container-fluid.hy img {
+            max-width: 85%;
+            height: auto;
+        }
+    
+        .container-fluid.hy h5.banner-title {
+            font-size: 85%;
+        }
+    }
+
+   
+</style>
 <main class="main">
     <div class="container-fluid">
         <div class="row">
@@ -128,7 +155,7 @@
         </div><!-- End .container -->
     </div><!-- End .icon-boxes-container -->
 
-  <div class="container-fluid" style="display: flex; justify-content: space-between; ">
+  <div class="container-fluid hy" style="display: flex; justify-content: space-between; ">
     {% for i in categories %}
       <div >
         <div style="display: inline-block;">

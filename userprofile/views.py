@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 import re
 from django.forms import ValidationError
 from django.shortcuts import render,redirect
@@ -54,7 +56,16 @@ def order_view_user(request,view_id):
         item_status_o=Itemstatus.objects.all()
         cart_count =Cart.objects.filter(user =request.user).count()
         wishlist_count =Wishlist.objects.filter(user=request.user).count()
+        date = orderview.update_at + timedelta(days=3)
+
+        if date >= timezone.now():
+            date = True
+        else:
+            date = False
+        # print(date,'aaaaaaaaaaaaaaaaaaa')   
+        
         context = {
+            'date' :date,
             'orderview': orderview,
             'address': address,
             'products': products,
