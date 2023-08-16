@@ -170,14 +170,24 @@ AUTH_USER_MODEL = 'user.CustomUser'
 # Email Configuration
 # settings.py
 
+
+
+
+# Email Configuration
 EMAIL_BACKEND = config('EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST') # e.g., smtp.gmail.com
-EMAIL_PORT = config('EMAIL_PORT')  # check your SMTP provider for the correct port
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+
+SECRET_KEY = config('SECRET_KEY')
+
+
 
 LOGIN_URL = 'user_login1'
+# settings.py
+
+
 
 
