@@ -30,7 +30,7 @@ def user_signup(request):
             user=CustomUser.objects.get(email=get_email)
             if not re.search(re.compile(r'^\d{6}$'), get_otp): 
                 messages.error(request,'OTP should only contain numeric!')
-                return render(request,'user\signup.html',{'otp':True,'user':user})  
+                return render(request,'user/signup.html',{'otp':True,'user':user})  
 
             session_otp=request.session.get('otp')
             if int(get_otp) == session_otp:
@@ -42,14 +42,14 @@ def user_signup(request):
                 return redirect('home')
             else:
                 messages.warning(request,f'you Entered a Wrong OTP')
-                return render(request,'user\signup.html',{'otp':True,'user':user})
+                return render(request,'user/signup.html',{'otp':True,'user':user})
         else:
             get_otp=request.POST.get('otp1')
             email=request.POST.get('user1')
             if get_otp:
                 user=CustomUser.objects.get(email=email)
                 messages.error(request,'field cannot empty!')
-                return render(request,'user\signup.html',{'otp':True,'user':user})
+                return render(request,'user/signup.html',{'otp':True,'user':user})
             else:
                 firstname=request.POST['fname']
                 lastname=request.POST['lname']
@@ -70,7 +70,7 @@ def user_signup(request):
                 if (phonenumber.strip()=='' or password1.strip()==''or password2.strip
                     ()==''  or email.strip()=='' or firstname.strip()=='' or lastname.strip()=='') :
                     messages.error(request,'field cannot empty!')
-                    return render(request,'user\signup.html',context )
+                    return render(request,'user/signup.html',context )
                 
                 elif CustomUser.objects.filter(phone_number=phonenumber).exists():
                     user = CustomUser.objects.get(phone_number=phonenumber)
@@ -79,12 +79,12 @@ def user_signup(request):
                     else:
                         messages.error(request,'phonenumber alredy exist!')
                         context['pre_phonenumber']=''
-                        return render(request,'user\signup.html',context )
+                        return render(request,'user/signup.html',context )
                     
                 elif not re.search(re.compile(r'(\+91)?(-)?\s*?(91)?\s*?(\d{3})-?\s*?(\d{3})-?\s*?(\d{4})'), phonenumber):   
                     messages.error(request,'phonenumber should only contain numeric!')  
                     context['pre_phonenumber']=''
-                    return render(request,'user\signup.html',context )
+                    return render(request,'user/signup.html',context )
                     
                 elif CustomUser.objects.filter(email=email).exists():
                     user = CustomUser.objects.get(email=email)
@@ -93,20 +93,20 @@ def user_signup(request):
                     else:        
                         messages.error(request,'email already exist!')
                         context['pre_email']=''
-                        return render(request,'user\signup.html',context ) 
+                        return render(request,'user/signup.html',context ) 
                     
                 elif password1 != password2:
                     messages.error(request,"password does not match")
                     context['pre_password1']=''
                     context['pre_password2']='' 
-                    return render(request,'user\signup.html',context )
+                    return render(request,'user/signup.html',context )
                 
                 
                 email_check=validateemail(email)
                 if email_check is False:
                     messages.error(request,'email not valid!')
                     context['pre_email']=''
-                    return render(request,'user\signup.html',context )
+                    return render(request,'user/signup.html',context )
                 
                 
                 password_check=validatepassword(password1)
@@ -114,17 +114,17 @@ def user_signup(request):
                     messages.error(request,'Enter strong password!')
                     context['pre_password1']=''
                     context['pre_password2']=''
-                    return render(request,'user\signup.html',context)
+                    return render(request,'user/signup.html',context)
                 
                 phonenumber_checking=len(phonenumber)
                 if not  phonenumber_checking==10:
                     messages.error(request,'phonenumber should be must contain 10digits!')  
                     context['pre_phonenumber']=''
-                    return render(request,'user\signup.html',context )
+                    return render(request,'user/signup.html',context )
                 if phonenumber=='0000000000':
                     messages.error(request,'phonenumber not valid!')  
                     context['pre_phonenumber']=''
-                    return render(request,'user\signup.html',context )
+                    return render(request,'user/signup.html',context )
                     
                     
                     
@@ -144,9 +144,9 @@ def user_signup(request):
 
                     fail_silently=False
                     )
-                return render(request,'user\signup.html',{'otp':True,'user':user})  
+                return render(request,'user/signup.html',{'otp':True,'user':user})  
         
-    return render(request,'user\signup.html')
+    return render(request,'user/signup.html')
         
         
 def validateemail(email):
@@ -205,7 +205,7 @@ def user_login1(request):
             messages.error(request,'invalid username or password!')
             return redirect('user_login1')
     
-    return render(request,'user\login.html')
+    return render(request,'user/login.html')
   
 def user_loginotp(request):
    
@@ -216,7 +216,7 @@ def user_loginotp(request):
             user=CustomUser.objects.get(email=get_email)
             if not re.search(re.compile(r'^\d{6}$'), get_otp): 
                 messages.error(request,'OTP should only contain numeric!')
-                return render(request,'user\loginwithotp.html',{'otp':True,'user':user}) 
+                return render(request,'user/loginwithotp.html',{'otp':True,'user':user}) 
             session_otp=request.session.get('otp')
             if int(get_otp) == session_otp:
                 auth.login(request,user)
@@ -224,14 +224,14 @@ def user_loginotp(request):
                 return redirect('home')   
             else:
                 messages.warning(request,'You Entered a wrong OTP!')
-                return render(request,'user\loginwithotp.html',{'otp':True,'user':user})  
+                return render(request,'user/loginwithotp.html',{'otp':True,'user':user})  
         else:
             get_otp=request.POST.get('otp1')
             email=request.POST.get('user1')
             if get_otp:
                 user=CustomUser.objects.get(email=email)
                 messages.error(request,'field cannot empty!')
-                return render(request,'user\loginwithotp.html',{'otp':True,'user':user})
+                return render(request,'user/loginwithotp.html',{'otp':True,'user':user})
             else:
                 email=request.POST['email']
             
@@ -243,7 +243,7 @@ def user_loginotp(request):
                 email_check=validateemail(email)
                 if email_check is False:
                     messages.error(request,'email not valid!')
-                    return render(request,'user\loginwithotp.html')
+                    return render(request,'user/loginwithotp.html')
                         
                 if CustomUser.objects.filter(email=email):
                     user=CustomUser.objects.get(email=email)
@@ -258,11 +258,11 @@ def user_loginotp(request):
                         fail_silently=False
                     )
              
-                    return render (request,'user\loginwithotp.html',{'otp':True,'user':user}) 
+                    return render (request,'user/loginwithotp.html',{'otp':True,'user':user}) 
                 else:
                     messages.error(request,'email does not exist!')
-                    return render(request,'user\loginwithotp.html')
-    return render (request,'user\loginwithotp.html')  
+                    return render(request,'user/loginwithotp.html')
+    return render (request,'user/loginwithotp.html')  
 
 @login_required(login_url='user_login1')
 def logout1(request):
@@ -278,7 +278,7 @@ def forgot_password(request):
             user=CustomUser.objects.get(email=get_email)
             if not re.search(re.compile(r'^\d{6}$'), get_otp): 
                 messages.error(request,'OTP should only contain numeric!')
-                return render(request,'user\password_forgot.html',{'otp':True,'user':user}) 
+                return render(request,'user/password_forgot.html',{'otp':True,'user':user}) 
             session_otp=request.session.get('otp')
             if int(get_otp) == session_otp:
                 password1 = request.POST.get('password1')
@@ -288,16 +288,16 @@ def forgot_password(request):
                             }
                 if password1.strip()==''or password2.strip()=='':
                     messages.error(request,'field cannot empty !')
-                    return render(request,'user\password_forgot.html',{'otp':True,'user':user,'pre_otp':get_otp})
+                    return render(request,'user/password_forgot.html',{'otp':True,'user':user,'pre_otp':get_otp})
                 
                 elif password1 != password2:
                     messages.error(request,'Password does not match!')
-                    return render(request,'user\password_forgot.html',{'otp':True,'user':user,'pre_otp':get_otp})
+                    return render(request,'user/password_forgot.html',{'otp':True,'user':user,'pre_otp':get_otp})
                     
                 Pass = validatepassword(password1)
                 if Pass is False:
                     messages.error(request,'Please enter Strong password!')
-                    return render(request,'user\password_forgot.html',{'otp':True,'user':user,'pre_otp':get_otp})
+                    return render(request,'user/password_forgot.html',{'otp':True,'user':user,'pre_otp':get_otp})
                 user.set_password(password1)
                 user.save()
                 del request.session['otp']
@@ -305,7 +305,7 @@ def forgot_password(request):
                 return redirect('user_login1')
             else:
                 messages.warning(request,'You Entered a wrong OTP!')
-                return render(request,'user\password_forgot.html',{'otp':True,'user':user})  
+                return render(request,'user/password_forgot.html',{'otp':True,'user':user})  
         else:
             
             get_otp=request.POST.get('otp1')
@@ -313,19 +313,19 @@ def forgot_password(request):
             if get_otp:
                 user=CustomUser.objects.get(email=email)
                 messages.error(request,'field cannot empty!')
-                return render(request,'user\password_forgot.html',{'otp':True,'user':user})
+                return render(request,'user/password_forgot.html',{'otp':True,'user':user})
                 
             else:   
                 email=request.POST['email']
                 
                 if email.strip()=='':
                     messages.error(request,'field cannot empty!')
-                    return render(request,'user\password_forgot.html')
+                    return render(request,'user/password_forgot.html')
                 
                 email_check=validateemail(email)
                 if email_check is False:
                     messages.error(request,'email not valid!')
-                    return render(request,'user\password_forgot.html')
+                    return render(request,'user/password_forgot.html')
             
                 if CustomUser.objects.filter(email=email):
                     user=CustomUser.objects.get(email=email)
@@ -339,11 +339,11 @@ def forgot_password(request):
                         [user.email],
                         fail_silently=False
                     )
-                    return render (request,'user\password_forgot.html',{'otp':True,'user':user}) 
+                    return render (request,'user/password_forgot.html',{'otp':True,'user':user}) 
                 else:
                     messages.error(request,'email does not exist!')
-                    return render(request,'user\password_forgot.html')
-    return render (request,'user\password_forgot.html')  
+                    return render(request,'user/password_forgot.html')
+    return render (request,'user/password_forgot.html')  
 
    
  
