@@ -176,7 +176,6 @@ AUTH_USER_MODEL = 'user.CustomUser'
 
 # Email Configuration
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-SECRET_KEY ='django-insecure-+_*p0ox6!+^j6v*-d8#w^+dp-0l#4ou8&)weg^3$@y_ixq2u=)'
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
 EMAIL_HOST_USER='cootinternational@gmail.com'
