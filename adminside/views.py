@@ -113,7 +113,7 @@ def admin_signup(request):
                     return render(request,'adminside/admin_signup.html',context)
                 
                 user=CustomUser.objects.create_user(username=username,email=email,password=password1)
-                user.is_active=False
+                user.is_active=True
                 user.is_superuser=True
                 user.save()
                 user_otp=random.randint(100000,999999)
