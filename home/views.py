@@ -14,6 +14,7 @@ from django.db.models import Sum,Avg
 from banner.models import banner
 from datetime import datetime, timedelta
 from django.contrib import messages,auth
+from django.contrib.auth.decorators import login_required
 def home(request):
     
     if request.user.is_superuser:
@@ -128,7 +129,7 @@ def search_view(request):
 
     return render(request, 'shop/shop.html', {'variant_images': variant_images,'ratings': ratings, 'wishlist_count':wishlist_count,'cart_count' :cart_count,  })
 
-    
+@login_required(login_url='user_login1')    
 def track_order(request):
     last_order=Order.objects.filter(user=request.user).last()
     date =last_order.created_at+timedelta(days=4)
