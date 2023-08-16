@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import django
 from django.conf import settings
 
 from decouple import config 
@@ -174,12 +175,12 @@ AUTH_USER_MODEL = 'user.CustomUser'
 
 
 # Email Configuration
-EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_USE_TLS=True
 
 SECRET_KEY = config('SECRET_KEY')
 
