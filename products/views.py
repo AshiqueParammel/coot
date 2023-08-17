@@ -126,7 +126,7 @@ def product_edit(request,product_id):
         
         return redirect('product') 
 
-    
+@login_required(login_url='admin_login1')    
 def product_view(request,product_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
@@ -202,6 +202,7 @@ def add_review(request):
     
     return redirect('product_show',product_id,img_id)
 
+@login_required(login_url='admin_login1')
 def product_search(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':

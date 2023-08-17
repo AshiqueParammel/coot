@@ -14,7 +14,7 @@ def offer(request):
     }
 
     return render (request,'adminside/offer.html',context)
-
+@login_required(login_url='admin_login1')
 def add_offer(request):
     if request.method == 'POST':
         offername = request.POST.get('offername')
@@ -50,7 +50,7 @@ def add_offer(request):
         offer.save()
         messages.success(request, "Offer added successfully!")
         return redirect('offer')
-    
+@login_required(login_url='admin_login1')   
 def edit_offer(request, offer_id):
     if request.method == 'POST':
         offername = request.POST.get('offername')
@@ -93,7 +93,7 @@ def edit_offer(request, offer_id):
      'offer':offers,
     }
     return render(request, 'adminside/offer.html', context)
-
+@login_required(login_url='admin_login1')
 def delete_offer(request, delete_id):
     try:
         offer = Offer.objects.get(id=delete_id)  

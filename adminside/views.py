@@ -38,7 +38,7 @@ from django.db.models import Prefetch
 
 
 
-
+@login_required(login_url='admin_login1')
 def admin_signup(request):
     
     if request.method == 'POST':
@@ -183,6 +183,7 @@ def dashboard(request):
     }
     
     return render(request,'adminside/dashboard.html',context)
+
 
 def admin_forgotpassword(request):
     if request.method=='POST':
@@ -427,7 +428,7 @@ def generate_pdf(request):
 
 
 
-
+@login_required(login_url='admin_login1')
 def user_sort(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':
@@ -443,7 +444,7 @@ def user_sort(request):
     return render(request, 'adminside/usermanagement.html', {'users': users})
 
         
-   
+@login_required(login_url='admin_login1')  
 def user_block_status(request):
     name = request.POST.get('name')
     if name == 'Active':
@@ -458,7 +459,7 @@ def user_block_status(request):
     else:
         return redirect('usermanagement_1')   
             
-    
+@login_required(login_url='admin_login1')    
 def contact_view(request):
     contact =Contacts.objects.all()
     context ={

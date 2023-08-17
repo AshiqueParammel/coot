@@ -15,7 +15,7 @@ def coupon(request):
     }
 
     return render (request,'adminside/coupon.html',context)
-
+@login_required(login_url='admin_login1')
 def add_coupon(request):
     
     if request.method == 'POST':
@@ -69,7 +69,7 @@ def add_coupon(request):
         coupon.save()
         messages.success(request, "Coupon added successfully!")
         return redirect('coupon')
-    
+@login_required(login_url='admin_login1')    
 def edit_coupon(request, coupon_id):
     if request.method == 'POST':
         coupon_name = request.POST.get('coupon_name')
@@ -130,7 +130,7 @@ def edit_coupon(request, coupon_id):
      'coupon':coupon,
     }
     return render(request, 'adminside/coupon.html', context)
-
+@login_required(login_url='admin_login1')
 def delete_coupon(request, coupon_id):
     try:
         coupon_delete = Coupon.objects.get(id=coupon_id)  
@@ -141,7 +141,7 @@ def delete_coupon(request, coupon_id):
     except:
         messages.error(request, "The specified coupon does not exist!")
     return redirect('coupon')
-
+@login_required(login_url='admin_login1')
 def coupon_search(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':
