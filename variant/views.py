@@ -206,10 +206,7 @@ def get_color_name(color_code):
         return "Unknown"
     
     
-def image_list(request,variant_id):
-    if not request.user.is_superuser:
-        return redirect('admin_login1')
-  
+def image_list(request,variant_id):  
     image=VariantImage.objects.filter(variant=variant_id,is_available =True)
     add_image =variant_id
     return render(request,'variant/image_management.html',{'image':image,'add_image':add_image})
