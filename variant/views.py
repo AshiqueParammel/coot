@@ -177,8 +177,12 @@ def add_color(request):
             return redirect('product_color')
 
         if Color.objects.filter(color_name=colorname).exists():
-            messages.error(request, 'color already exists!')
-            return redirect('product_color')
+            color_add =Color.objects.get(color_name=colorname)
+            if color_add.is_available ==False:
+                pass
+            else:
+                messages.error(request, 'color already exists!')
+                return redirect('product_color')
 
         color_object = Color(color_name=colorname,color_code=color)
         color_object.save()
