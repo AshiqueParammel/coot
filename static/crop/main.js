@@ -53,7 +53,7 @@ input.addEventListener('change', ()=>{
                     alertBox.innerHTML = `<div class="alert alert-success" role="alert">
                                             Successfully saved and cropped the selected image
                                         </div>`
-                                        window.location.href = `http://65.1.145.166/variant/image_view/${imgId}`;
+                                        window.location.href = `/variant/image_list/${imgId}`;
                                            
                 },
                 
