@@ -131,10 +131,10 @@ def product_view(request,product_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
   
-    variant=Variant.objects.filter(product=product_id , is_available=True)
-    size_range= Size.objects.all().order_by('id')
-    color_name= Color.objects.all().order_by('id')
-    product=Product.objects.all().order_by('id')
+    variant=Variant.objects.filter(product=product_id,is_available=True)
+    size_range= Size.objects.filter(is_available=True).order_by('id')
+    color_name= Color.objects.filter(is_available=True).order_by('id')
+    product=Product.objects.filter(is_available=True).order_by('id')
     variant_list={
         'variant'    :variant,
         'size_range' :size_range,

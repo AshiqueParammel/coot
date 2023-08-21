@@ -126,8 +126,11 @@ def search_view(request):
     else:
         
         variant_images=False
-
-    return render(request, 'shop/shop.html', {'variant_images': variant_images,'ratings': ratings, 'wishlist_count':wishlist_count,'cart_count' :cart_count,  })
+    context={'variant_images': variant_images,
+             'ratings': ratings,
+             'wishlist_count':wishlist_count,
+             'cart_count' :cart_count,  }
+    return render(request, 'shop/shop.html',context )
 
 @login_required(login_url='user_login1')    
 def track_order(request):
