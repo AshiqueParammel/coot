@@ -186,3 +186,5 @@ def contact_user(request):
 
     return render(request,'mycontact/mycontact.html')
     
+
+        
