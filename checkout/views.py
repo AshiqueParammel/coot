@@ -171,7 +171,11 @@ def placeorder(request):
         neworder.payment_mode = request.POST.get('payment_method')
         neworder.message = request.POST.get('order_note')
         session_coupon_id=request.session.get('coupon_id')
-        session_coupons =Coupon.objects.get(id=session_coupon_id)
+        if session_coupon_id!=None:
+            session_coupons =Coupon.objects.get(id=session_coupon_id)
+        else:
+            session_coupons = None
+               
         neworder.coupon = session_coupons
         
 
