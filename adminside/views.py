@@ -38,7 +38,7 @@ from django.db.models import Prefetch
 
 
 
-@login_required(login_url='admin_login1')
+# @login_required(login_url='admin_login1')
 def admin_signup(request):
     
     if request.method == 'POST':
@@ -53,6 +53,7 @@ def admin_signup(request):
 
             if int(get_otp)==UserOTP.objects.filter(user=user).last().otp:
                 user.is_active=True
+                user.is_staff=True
                 user.save()
                 auth.login(request,user)
                 # messages.success(request,f'Account is created for {user.email}')
