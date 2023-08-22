@@ -40,6 +40,7 @@ def addproduct(request):
             check = Product.objects.get(product_name=name)
             if check.is_available == False:
                 check.product_name +=check.product_name
+                check.slug +=check.slug
                 check.save()
             else:    
                 messages.error(request, 'Product name already exists')
