@@ -38,7 +38,7 @@ from django.db.models import Prefetch
 
 
 
-# @login_required(login_url='admin_login1')
+@login_required(login_url='admin_login1')
 def admin_signup(request):
     
     if request.method == 'POST':
