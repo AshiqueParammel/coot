@@ -39,7 +39,8 @@ def addproduct(request):
         if Product.objects.filter(product_name=name).exists():
             check = Product.objects.get(product_name=name)
             if check.is_available == False:
-                pass
+                check.product_name +=check.product_name
+                check.save()
             else:    
                 messages.error(request, 'Product name already exists')
                 return redirect('product')
