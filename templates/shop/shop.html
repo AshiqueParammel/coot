@@ -62,7 +62,7 @@
                         
         			</div><!-- End .toolbox -->
 
-                    <div class="products">
+                    <div class="products" id="product-list">
                         <div class="row">
                             {% if variant_images %}
                            
@@ -150,8 +150,14 @@
                      
                         {% endif %}
                         <div class="load-more-container text-center">
+                            <form action="{% url 'Shop' %}" method="GET">
+                                <input type="hidden" value="More" name="Moreproducts">
+                                <button type="submit" class="btn btn-outline-darker btn-load-more">
+                                    More Products <i class="icon-refresh"></i>
+                                </button>
+                            </form>
                             
-                            <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
+
                         </div><!--End .load-more-container -->
                     </div><!--End .products -->
 
@@ -436,5 +442,11 @@ $(document).ready(function() {
         });
     });
 </script>
+
+
+<!-- Add this script at the end of your HTML body -->
+
+    
+
 {% endblock %}
 

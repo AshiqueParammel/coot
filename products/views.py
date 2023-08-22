@@ -37,8 +37,12 @@ def addproduct(request):
         product_description = request.POST.get('product_description')
         # Validation
         if Product.objects.filter(product_name=name).exists():
-            messages.error(request, 'Product name already exists')
-            return redirect('product')
+            check = Product.objects.get(product_name=name)
+            if check.is_available == False:
+                pass
+            else:    
+                messages.error(request, 'Product name already exists')
+                return redirect('product')
       
         if name.strip() == '' or price.strip() == '':
             messages.error(request, "Name or Price field are empty!")

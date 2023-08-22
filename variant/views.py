@@ -113,7 +113,7 @@ def prodectvariant_delete(request, variant_id):
     delete_productvariant = Variant.objects.get(id=variant_id) 
     delete_productvariant.is_available =False
     delete_productvariant.quantity= 0
-    delete_productvariant.filter(is_available=True)
+    delete_productvariant.save()
     messages.success(request,'product_variant deleted successfully!')
     return redirect('product_variant')       
     

@@ -6,9 +6,13 @@ from products.models import Product,Size,Color
 from cart.models import Cart
 from wishlist.models import Wishlist
 
+
 def Shop(request):
     
-
+    # item_count =request.GET.get('Moreproducts')
+    # item_count1 =3
+    # if item_count:
+    #     item_count1+=3
     # Get unique VariantImage objects based on the associated Product
     variant_images = (VariantImage.objects.filter(variant__product__is_available=True)
                       .order_by('variant__product').distinct('variant__product'))
@@ -161,7 +165,10 @@ def shop_sort(request):
     }
     
     return render(request, 'shop/shop.html', context)
+
+
     
+
     
     
              
