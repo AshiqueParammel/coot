@@ -175,10 +175,27 @@ def dashboard(request):
     categories = [item['order__created_at__date'].strftime('%d/%m') for item in sales_data]
     sales_values = [item['total_sales'] for item in sales_data]
     
+   
     return_data = OrderItem.objects.filter(orderitem_status__item_status__in=["Return", "Cancelled"]).values('order__created_at__date').annotate(total_returns=Sum('price')).order_by('-order__created_at__date')
     return_values = [item['total_returns'] for item in return_data]
     orders =Order.objects.order_by('-created_at')[:10]
+    try:
+        status_delivery =Order.objects.filter(order_status__id=4).count()
+        status_cancel =Order.objects.filter(order_status__id=5).count()
+        status_return =Order.objects.filter(order_status__id=6).count()
+        Total = status_delivery + status_cancel + status_return 
+        status_delivery = (status_delivery / Total) * 100
+        status_cancel = (status_cancel / Total) * 100
+        status_return = (status_return / Total) * 100
+    except:
+        status_delivery=0
+        status_cancel=0
+        status_return=0
+            
     context = {
+        'status_delivery':status_delivery,
+        'status_cancel':status_cancel,
+        'status_return':status_return,
         'orders':orders,
         'categories': categories,
         'sales_values': sales_values,

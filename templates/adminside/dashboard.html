@@ -33,10 +33,10 @@
             <!-- Yearly Breakup -->
             <div class="card overflow-hidden">
               <div class="card-body p-4">
-                <h5 class="card-title mb-9 fw-semibold">TOTAL PROFIT</h5>
+                <h5 class="card-title mb-9 fw-semibold">TOTAL STATUS</h5>
                 <div class="row align-items-center">
                   <div class="col-8">
-                    <h4 class="fw-semibold mb-3">$36,358</h4>
+                    <h4 class="fw-semibold mb-3"></h4>
                     <!-- <div class="d-flex align-items-center mb-3">
                       <span
                         class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
@@ -47,16 +47,16 @@
                     </div> -->
                     <div class="d-flex align-items-center">
                       <div class="me-4">
-                        <span class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
-                        <span class="fs-2">Sale</span>
+                        <span class="round-8 bg-success rounded-circle me-2 d-inline-block"></span>
+                        <span class="fs-2">Deliverd</span>
                       </div>
                       <div>
-                        <span class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
+                        <span class="round-8 bg-warning rounded-circle me-2 d-inline-block"></span>
                         <span class="fs-2">cancel</span>
                       </div>
                       <p style="color: aliceblue;">--</p>
                       <div>
-                        <span class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
+                        <span class="round-8 bg-danger rounded-circle me-2 d-inline-block"></span>
                         <span class="fs-2">Return</span>
                       </div>
                     </div>
@@ -315,14 +315,19 @@
   var chart = new ApexCharts(document.querySelector("#chart"), chart);
   chart.render();
 
+  var status_delivery = {{ status_delivery }};
+  var status_cancel = {{ status_cancel }};
+  var status_return = {{ status_return }};
+
+
 
   // =====================================
   // Breakup
   // =====================================
   var breakup = {
     color: "#adb5bd",
-    series: [38, 40, 25],
-    labels: ["2022", "2021", "2020"],
+    series: [status_delivery,status_cancel,status_return],
+    labels: ["Deliverd", "Cancel", "Return"],
     chart: {
       width: 180,
       type: "donut",
@@ -349,7 +354,7 @@
     legend: {
       show: false,
     },
-    colors: ["#5D87FF", "#ecf2ff", "#F9F9FD"],
+    colors: ["#60F596", "#FFBD00", "#F56060"],
 
     responsive: [
       {
