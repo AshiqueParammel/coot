@@ -40,6 +40,8 @@ from django.db.models import Prefetch
 
 @login_required(login_url='admin_login1')
 def admin_signup(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     
     if request.method == 'POST':
         

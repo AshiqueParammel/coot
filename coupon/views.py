@@ -116,7 +116,7 @@ def edit_coupon(request, coupon_id):
         
         
         coupon_edit = Coupon.objects.get(id=coupon_id)
-        coupon_edit.coupon_edite_name = coupon_name
+        coupon_edit.coupon_name = coupon_name
         coupon_edit.coupon_code = coupon_code
         coupon_edit.min_price = min_price
         coupon_edit.coupon_discount_amount = coupon_discount_amount
