@@ -36,28 +36,28 @@
             {% if banners %}
             <div class="col-lg-6">
                 <div class="banner banner-big banner-overlay">
-                    <a href="#">
-                        <img src="{{ banners.1.banner_image.url }}" alt="Banner">
+                    <a href="{% url 'user_category_show' 3 %}">
+                        <img src="{{ banners.0.banner_image.url }}" alt="Banner">
                     </a>
 
                     <div class="banner-content banner-content-center">
-                        <h3 class="banner-subtitle text-white"><a href="#">{{ banners.1.caption }}</a></h3><!-- End .banner-subtitle -->
-                        <h2 class="banner-title text-white"><a href="#">{{banners.1.banner}}</a></h2><!-- End .banner-title -->
-                        <a href="#" class="btn underline"><span>Discover Now</span></a>
+                        <h3 class="banner-subtitle text-white"><a href="{% url 'user_category_show' 3 %}">{{ banners.0.caption }}</a></h3><!-- End .banner-subtitle -->
+                        <h2 class="banner-title text-white"><a href="{% url 'user_category_show' 3 %}">{{banners.0.banner}}</a></h2><!-- End .banner-title -->
+                        <a href="{% url 'user_category_show' 3 %}" class="btn underline"><span>Discover Now</span></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
             </div><!-- End .col-lg-6 -->
 
             <div class="col-lg-6">
                 <div class="banner banner-big banner-overlay">
-                    <a href="#">
-                        <img src="{{ banners.0.banner_image.url }}" alt="Banner">
+                    <a href="{% url 'user_category_show' 2 %}">
+                        <img src="{{ banners.1.banner_image.url }}" alt="Banner">
                     </a>
 
                     <div class="banner-content banner-content-center">
-                        <h3 class="banner-subtitle text-white"><a href="#">{{ banners.0.caption }}</a></h3><!-- End .banner-subtitle -->
-                        <h2 class="banner-title text-white"><a href="#">{{ banners.0.banner }}</a></h2><!-- End .banner-title -->
-                        <a href="#" class="btn underline"><span>Discover Now</span></a>
+                        <h3 class="banner-subtitle text-white"><a href="{% url 'user_category_show' 2 %}">{{ banners.1.caption }}</a></h3><!-- End .banner-subtitle -->
+                        <h2 class="banner-title text-white"><a href="{% url 'user_category_show' 2 %}">{{ banners.1.banner }}</a></h2><!-- End .banner-title -->
+                        <a href="{% url 'user_category_show' 2 %}" class="btn underline"><span>Discover Now</span></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
             </div><!-- End .col-lg-6 -->

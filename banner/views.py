@@ -1,4 +1,6 @@
 from django.shortcuts import render,redirect
+
+from categories.models import category
 from .models import banner
 from django.contrib import messages
 # Create your views here.
@@ -8,7 +10,8 @@ def banners(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     banners_display = banner.objects.all().order_by('id')
-    return render(request, 'banner/banner.html',{'banner' :banners_display})
+    category_display =category.objects.filter(is_available=True)
+    return render(request, 'banner/banner.html',{'banner' :banners_display,'categorys':category_display})
 
 def add_banners(request):
     if not request.user.is_superuser:
@@ -86,7 +89,8 @@ def delete_banner(request,delete_banner_id):
     if not request.user.is_superuser:
         return redirect('admin_login')
     banners = banner.objects.get(id=delete_banner_id)
-    banners.delete()
+    banners.is_available =False
+    banners.save()
     messages.success(request, 'banner deleted successfully! ')
     
     return redirect('banners')
