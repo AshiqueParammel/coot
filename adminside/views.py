@@ -180,6 +180,23 @@ def dashboard(request):
     return_values = [item['total_returns'] for item in return_data]
     orders =Order.objects.order_by('-created_at')[:10]
     try:
+        totalsale=0
+        total_sales =Order.objects.all()
+        for i in total_sales:
+            i.total_price
+            totalsale+=i.total_price
+    except:
+         totalsale=0 
+    try:
+        totalearnings=0
+        total_earn =Order.objects.filter(order_status__id=4)
+        for i in total_earn:
+            i.total_price
+            totalearnings+=i.total_price
+    except:
+         totalearnings=0       
+        
+    try:
         status_delivery =Order.objects.filter(order_status__id=4).count()
         status_cancel =Order.objects.filter(order_status__id=5).count()
         status_return =Order.objects.filter(order_status__id=6).count()
@@ -193,6 +210,8 @@ def dashboard(request):
         status_return=0
             
     context = {
+        'totalsale':totalsale,
+        'totalearnings':totalearnings,
         'status_delivery':status_delivery,
         'status_cancel':status_cancel,
         'status_return':status_return,
