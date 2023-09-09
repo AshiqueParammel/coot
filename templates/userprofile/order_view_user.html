@@ -180,6 +180,12 @@
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Status</th>
                                 <th scope="col"></th>
+                                {% for i in products %}
+                                {% if i.orderitem_status.item_status == 'Delivered' %}
+                                <th scope="col">Add Your Review</th>
+                                {% endif %}
+
+                                {% endfor %}
                                 
                             </tr>
                         </thead>
@@ -347,6 +353,77 @@
                                     {% endif %}
 
                                 </td>
+                                {% if i.orderitem_status.item_status == 'Delivered' %}
+                                <td>
+                                    <a href="#review-modal-{{ forloop.counter }}" data-toggle="modal"><span class="btn btn-outline-primary-2" >Add Review</span></a>
+                                    
+                                    <div class="modal fade" id="review-modal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                                                    </button>
+                                    
+                                                    <div class="form-box">
+                                                        <div class="form-tab">
+                                                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="true">Add Review</a>
+                                                                </li>
+                                    
+                                                            </ul>
+                                                            <div class="tab-content" id="tab-content-5">
+                                                                <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                                                  
+                                                                    <form action="{% url 'add_review' %}" method="POST" id="review-form"  class="refa">
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" class="form-control" value="{{ i.variant.id }}" name="img_id" required>
+                                                                        <input type="hidden" class="form-control" value="{{ i.variant.product.id }}" name="product_id" required>
+                                                                        <input type="hidden" class="form-control" value="{{ i.id }}" name="view_id" required>
+                                                                        
+                                                                        <div class="form-group">
+                                                                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <input type="text" class="form-control" id="name" name="email" placeholder="Enter your Email" required>
+                                                                        </div>
+                                                        
+                                                                        <div class="form-group">
+                                                                            <select class="form-control" id="rating" name="rating" required>
+                                                                                <option value="5">5 Stars</option>
+                                                                                <option value="4">4 Stars</option>
+                                                                                <option value="3">3 Stars</option>
+                                                                                <option value="2">2 Stars</option>
+                                                                                <option value="1">1 Star</option>
+                                                                            </select>
+                                                                        </div>
+                                                        
+                                                        
+                                                                        <div class="form-group">
+                                                                           
+                                                                            <textarea class="form-control" id="review-content" name="review" placeholder="review-content" required></textarea>
+                                                                        </div>
+                                                        
+                                                                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                                                                    </form>
+                                                                    
+                                                                    
+                                                    
+                                                                   
+                                                                </div><!-- .End .tab-pane -->
+                                                             
+                                                                </div><!-- .End .tab-pane -->
+                                                            </div><!-- End .tab-content -->
+                                                        </div><!-- End .form-tab -->
+                                                    </div><!-- End .form-box -->
+                                                </div><!-- End .modal-body -->
+                                            </div><!-- End .modal-content -->
+                                        </div><!-- End .modal-dialog -->
+                                    </div><!-- End .modal -->
+
+                                </td>
+                                {% endif %}
 
                                 {% endfor %}
 

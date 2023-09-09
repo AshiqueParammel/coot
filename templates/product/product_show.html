@@ -233,10 +233,7 @@ justify-content: center;
 <div class="container">
     <div class="product-details-tab">
         <ul class="nav nav-pills justify-content-center" role="tablist">
-         
-            <li class="nav-item">
-                <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Add Your Review</a>
-            </li>
+        
             {% if rev_count %}
             <li class="nav-item">
                 <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews({{ rev_count }}) </a>
@@ -248,43 +245,7 @@ justify-content: center;
             {% endif %}
         </ul>
         <div class="tab-content">
-          
-    
-            <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
-                <div class="product-desc-content">
-                  
-
-                    <form action="{% url 'add_review' %}" method="POST" id="review-form"  class="refa">
-                        {% csrf_token %}
-                        <input type="hidden" class="form-control" value="{{ variant.0.variant.id }}" name="img_id" required>
-                        <input type="hidden" class="form-control" value="{{ variant.0.variant.product.id }}" name="product_id" required>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="name" name="email" placeholder="Enter your Email" required>
-                        </div>
         
-                        <div class="form-group">
-                            <select class="form-control" id="rating" name="rating" required>
-                                <option value="5">5 Stars</option>
-                                <option value="4">4 Stars</option>
-                                <option value="3">3 Stars</option>
-                                <option value="2">2 Stars</option>
-                                <option value="1">1 Star</option>
-                            </select>
-                        </div>
-        
-        
-                        <div class="form-group">
-                           
-                            <textarea class="form-control" id="review-content" name="review" placeholder="review-content" required></textarea>
-                        </div>
-        
-                        <button type="submit" class="btn btn-primary">Submit Review</button>
-                    </form>
-                </div><!-- End .product-desc-content -->
-            </div><!-- .End .tab-pane -->
             <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
                 <div class="reviews">
                     <h3>Reviews</h3>

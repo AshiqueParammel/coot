@@ -15,7 +15,7 @@ import os
 import django
 from django.conf import settings
 
-from decouple import config 
+from decouple import Config 
 
 
 
@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY =  config('SECRET_KEY')
+SECRET_KEY =  Config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -172,7 +172,7 @@ AUTH_USER_MODEL = 'user.CustomUser'
 # settings.py
 
 
-
+ 
 
 # Email Configuration
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'

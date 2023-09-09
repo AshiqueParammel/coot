@@ -271,4 +271,3 @@ def razarypaycheck(request):
  
          
     return JsonResponse({'total_price': total_price})
-

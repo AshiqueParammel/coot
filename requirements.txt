@@ -11,7 +11,7 @@ django-mathfilters==1.0.0
 Django-Verify-Email==2.0.3
 filelock==3.12.0
 fpdf==1.7.2
-Pillow==10.0.0
+Pillow==10.0.0 
 platformdirs==3.5.1
 psycopg2==2.9.6
 pycares==4.3.0

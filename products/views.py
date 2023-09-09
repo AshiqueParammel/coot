@@ -162,6 +162,7 @@ def add_review(request):
             email = request.POST.get('email')
             product_id = request.POST.get('product_id')
             img_id =request.POST.get('img_id')
+            view_id =request.POST.get('view_id')
 
             print(rating,review_text,name,email,product_id,'111111111111')
 
@@ -170,7 +171,7 @@ def add_review(request):
 
             if rating == 0:
                 messages.error(request,'Please Select Stars!')
-                return redirect('product_show',product_id,img_id)
+                return redirect('order_view_user',view_id)
             
           
 
@@ -184,13 +185,15 @@ def add_review(request):
                 email=email
             )
                
-                messages.success(request,'Review added successfully!')
-                return redirect('product_show',product_id,img_id)
+                messages.success(request,'Your Review added successfully!')
+                return redirect('order_view_user',view_id)
+                
+            
             
             
             else:
                 messages.error(request,'Invalid email! Please log in with the correct email!')
-                return redirect('product_show',product_id,img_id)
+                return redirect('order_view_user',view_id)
                
             
     
@@ -200,13 +203,13 @@ def add_review(request):
    
         else:
             messages.error(request,'Login to continue!')
-            return redirect('product_show',product_id,img_id)
+            return redirect('order_view_user',view_id)
             
             
     
         messages.error(request,'Invalid request method!')
     
-    return redirect('product_show',product_id,img_id)
+    return redirect('order_view_user',view_id)
 
 @login_required(login_url='admin_login1')
 def product_search(request):
