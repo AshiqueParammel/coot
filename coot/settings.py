@@ -175,11 +175,11 @@ AUTH_USER_MODEL = 'user.CustomUser'
  
 
 # Email Configuration
-EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
-EMAIL_HOST_USER='cootinternational@gmail.com'
-EMAIL_HOST_PASSWORD='rphivgxdwqoskwph'
+EMAIL_BACKEND=Config('EMAIL_BACKEND')
+EMAIL_HOST=Config('EMAIL_HOST')
+EMAIL_PORT=Config('EMAIL_PORT')
+EMAIL_HOST_USER=Config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=Config('EMAIL_HOST_PASSWORD')
 
 EMAIL_USE_TLS=True
 
